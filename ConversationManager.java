@@ -1,4 +1,4 @@
-package clavardage
+package clavardage;
 
 public class ConversationManager {
 

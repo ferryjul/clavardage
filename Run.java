@@ -6,17 +6,19 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 @SuppressWarnings("serial")
-public class MainWindow extends Frame
+public class Run extends Frame
 {
-   private static Label lblInput;
+   private static Run r;
+   private static Label lblInfo;
    private Dialog login;
-   private static String currentUserName;
-   private static Label lblOnline; //unused now, to be used later.
+   private TextField box;
 
-   class MyButtonChatListener implements ActionListener
+   class MyButtonValidateListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
+		new MainWindow(box.getText());
+		r.dispose();
       }
    }
 
@@ -29,26 +31,28 @@ public class MainWindow extends Frame
       }
    }
 
-   public MainWindow(String userName)
+   public Run()
    {
-      		currentUserName = userName;    
+			box = new TextField();
             login = new Dialog(this);
-            lblInput = new Label("Welcome " + currentUserName
-                  + " in myChatroom. You can now start messaging online users",
+            lblInfo = new Label("Welcome. Enter your pseudo please.",
                   Label.CENTER); // Construct by invoking a constructor via the new
                                  // operator
-            lblOnline = new Label("");
             login.setLayout(new GridLayout(0, 1));
-            Button chat = new Button("Send a message");        
-            chat.addActionListener(new MyButtonChatListener());
+            Button validate = new Button("Validate Pseudo");        
+            validate.addActionListener(new MyButtonValidateListener());
             Button exit = new Button("Quit");
             exit.addActionListener(new MyButtonExitListener());
             login.setSize(850, 200);
-            login.add(lblInput);
-            login.add(lblOnline);    
-            login.add(chat);   
+            login.add(lblInfo);   
+			login.add(box);
+            login.add(validate);   
             login.add(exit);    
             login.setVisible(true);
-
    }
+
+	public static void main(String argv[]) {
+		r = new Run();
+	}
+	
 }
