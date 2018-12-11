@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.Thread;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Frame
@@ -12,6 +13,7 @@ public class MainWindow extends Frame
    private Dialog login;
    private static String currentUserName;
    private static Label lblOnline; //unused now, to be used later.
+   private static OnlineUsersManager networkDiscovery;
 
    class MyButtonChatListener implements ActionListener
    {
@@ -24,6 +26,8 @@ public class MainWindow extends Frame
    {
       public void actionPerformed(ActionEvent e)
       {
+		 // Fermeture de la découverte réseau
+		 networkDiscovery.closeCommunications();
          login.dispose();
          System.exit(0);
       }
@@ -31,6 +35,7 @@ public class MainWindow extends Frame
 
    public MainWindow(String userName)
    {
+			// Création de la fenêtre graphique
       		currentUserName = userName;    
             login = new Dialog(this);
             lblInput = new Label("Welcome " + currentUserName
@@ -49,6 +54,10 @@ public class MainWindow extends Frame
             login.add(chat);   
             login.add(exit);    
             login.setVisible(true);
-
+		
+			// Lancement de la découverte Réseau
+			networkDiscovery = new OnlineUsersManager();
+			Thread networkDiscoveryThread = new Thread(networkDiscovery);
+			networkDiscoveryThread.start();
    }
 }
