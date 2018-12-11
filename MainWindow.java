@@ -5,14 +5,46 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.lang.Thread;
+import java.util.Set;
+import java.util.Iterator;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Frame
 {
+
+		
+   public class onlineUpdater implements Runnable {
+		Label aLbl;
+		OnlineUsersManager networkDiscovery;
+
+		public onlineUpdater(Label lbl, OnlineUsersManager nD) {
+			this.aLbl = lbl;
+			this.networkDiscovery = nD;
+		}
+
+		public void run() {
+			while(true) {
+				Set<String> usersSet = networkDiscovery.getOnlineUsers();
+				Iterator<String> it = usersSet.iterator();
+				String onlineStr = "Currently Online Users :";
+				while(it.hasNext()) {
+					String aUser = it.next();
+					if(it.hasNext()) {
+						onlineStr = onlineStr + aUser +"," ;
+					}
+					else {
+						onlineStr = onlineStr + aUser + ".";
+					}
+				}
+				lblOnline.setText(onlineStr);
+			}
+		}
+
+	}
    private static Label lblInput;
    private Dialog login;
    private static String currentUserName;
-   private static Label lblOnline; //unused now, to be used later.
+   private static Label lblOnline;
    private static OnlineUsersManager networkDiscovery;
 
    class MyButtonChatListener implements ActionListener
@@ -27,7 +59,11 @@ public class MainWindow extends Frame
       public void actionPerformed(ActionEvent e)
       {
 		 // Fermeture de la découverte réseau
-		 networkDiscovery.closeCommunications();
+		 synchronized(networkDiscovery) {
+		  networkDiscovery.notifyOffline();
+		  networkDiscovery.closeCommunications();
+		 
+		 }
          login.dispose();
          System.exit(0);
       }
@@ -56,8 +92,14 @@ public class MainWindow extends Frame
             login.setVisible(true);
 		
 			// Lancement de la découverte Réseau
-			networkDiscovery = new OnlineUsersManager();
+			networkDiscovery = new OnlineUsersManager(userName);
 			Thread networkDiscoveryThread = new Thread(networkDiscovery);
 			networkDiscoveryThread.start();
+
+			onlineUpdater onlineUpdt = new onlineUpdater(lblOnline, networkDiscovery);
+			Thread onlineUpdtThread = new Thread(onlineUpdt);
+			onlineUpdtThread.start();
+
+			
    }
 }
