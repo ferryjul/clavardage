@@ -12,7 +12,6 @@ import java.util.Iterator;
 public class MainWindow extends Frame
 {
 
-		
    public class onlineUpdater implements Runnable {
 		Label aLbl;
 		OnlineUsersManager networkDiscovery;
@@ -27,6 +26,7 @@ public class MainWindow extends Frame
 				Set<String> usersSet = networkDiscovery.getOnlineUsers();
 				Iterator<String> it = usersSet.iterator();
 				String onlineStr = "Currently Online Users :";
+				synchronized(usersSet) {
 				while(it.hasNext()) {
 					String aUser = it.next();
 					if(it.hasNext()) {
@@ -36,21 +36,48 @@ public class MainWindow extends Frame
 						onlineStr = onlineStr + aUser + ".";
 					}
 				}
+				}
 				lblOnline.setText(onlineStr);
 			}
 		}
 
 	}
+
    private static Label lblInput;
    private Dialog login;
    private static String currentUserName;
    private static Label lblOnline;
+   private static Label lblPseudoError;
    private static OnlineUsersManager networkDiscovery;
+   private static TextField txtNewPseudo;
 
    class MyButtonChatListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
+      }
+   }
+
+   public class MyButtonChangePseudo implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+		if(!txtNewPseudo.getText().equals("")) {
+			int returnCode = networkDiscovery.notifyNewPseudo(txtNewPseudo.getText());		 
+			txtNewPseudo.setText("");
+			if(returnCode == -1) {
+				lblPseudoError.setText("Error : this pseudo is already used by a user");
+			} else if(returnCode == -2) {
+				lblPseudoError.setText("Error : this is already your pseudo");
+			} else if(returnCode == 0) {
+				lblPseudoError.setText("Pseudo change OK");
+			} else {
+				lblPseudoError.setText("Error : unexpected return Code");
+			}
+		}
+		else {
+			lblPseudoError.setText("Error : empty text field");
+		}
       }
    }
 
@@ -61,8 +88,7 @@ public class MainWindow extends Frame
 		 // Fermeture de la découverte réseau
 		 synchronized(networkDiscovery) {
 		  networkDiscovery.notifyOffline();
-		  networkDiscovery.closeCommunications();
-		 
+		  networkDiscovery.closeCommunications();	 
 		 }
          login.dispose();
          System.exit(0);
@@ -79,8 +105,12 @@ public class MainWindow extends Frame
                   Label.CENTER); // Construct by invoking a constructor via the new
                                  // operator
             lblOnline = new Label("");
+			lblPseudoError = new Label("");
             login.setLayout(new GridLayout(0, 1));
             Button chat = new Button("Send a message");        
+			txtNewPseudo = new TextField();
+			Button changePseudo = new Button("Set new pseudo :");
+			changePseudo.addActionListener(new MyButtonChangePseudo());
             chat.addActionListener(new MyButtonChatListener());
             Button exit = new Button("Quit");
             exit.addActionListener(new MyButtonExitListener());
@@ -89,6 +119,9 @@ public class MainWindow extends Frame
             login.add(lblOnline);    
             login.add(chat);   
             login.add(exit);    
+			login.add(changePseudo);
+			login.add(txtNewPseudo);
+			login.add(lblPseudoError);
             login.setVisible(true);
 		
 			// Lancement de la découverte Réseau
