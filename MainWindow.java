@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.Thread;
 import java.util.Set;
 import java.util.Iterator;
+import java.net.InetAddress;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Frame
@@ -50,11 +51,27 @@ public class MainWindow extends Frame
    private static Label lblPseudoError;
    private static OnlineUsersManager networkDiscovery;
    private static TextField txtNewPseudo;
+   private static TextField openConvWith;
 
    class MyButtonChatListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
+		String distantUser = openConvWith.getText();
+		openConvWith.setText("");
+		if(distantUser.equals("")) {
+			lblPseudoError.setText("Error : Empty field");
+		}
+		else if(distantUser.equals(currentUserName)) {
+			lblPseudoError.setText("Error : " + distantUser + " is your own pseudo");
+		}
+		else if(!networkDiscovery.isOnline(distantUser)) {
+			lblPseudoError.setText("Error : " + distantUser + " is not online");
+		}
+		else {
+			InetAddress hostAddress = networkDiscovery.getAddress(distantUser);
+			System.out.println("Beginning communication with " + distantUser + " at @" + hostAddress);
+		}
       }
    }
 
@@ -63,7 +80,8 @@ public class MainWindow extends Frame
       public void actionPerformed(ActionEvent e)
       {
 		if(!txtNewPseudo.getText().equals("")) {
-			int returnCode = networkDiscovery.notifyNewPseudo(txtNewPseudo.getText());		 
+			String newPse = txtNewPseudo.getText();
+			int returnCode = networkDiscovery.notifyNewPseudo(newPse);		 
 			txtNewPseudo.setText("");
 			if(returnCode == -1) {
 				lblPseudoError.setText("Error : this pseudo is already used by a user");
@@ -71,6 +89,9 @@ public class MainWindow extends Frame
 				lblPseudoError.setText("Error : this is already your pseudo");
 			} else if(returnCode == 0) {
 				lblPseudoError.setText("Pseudo change OK");
+				currentUserName = newPse;
+				lblInput.setText("Welcome " + currentUserName
+                  + " in myChatroom. You can now start messaging online users");
 			} else {
 				lblPseudoError.setText("Error : unexpected return Code");
 			}
@@ -107,7 +128,8 @@ public class MainWindow extends Frame
             lblOnline = new Label("");
 			lblPseudoError = new Label("");
             login.setLayout(new GridLayout(0, 1));
-            Button chat = new Button("Send a message");        
+            Button chat = new Button("Send a message to :");      
+			openConvWith = new TextField();  
 			txtNewPseudo = new TextField();
 			Button changePseudo = new Button("Set new pseudo :");
 			changePseudo.addActionListener(new MyButtonChangePseudo());
@@ -118,6 +140,7 @@ public class MainWindow extends Frame
             login.add(lblInput);
             login.add(lblOnline);    
             login.add(chat);   
+			login.add(openConvWith);
             login.add(exit);    
 			login.add(changePseudo);
 			login.add(txtNewPseudo);

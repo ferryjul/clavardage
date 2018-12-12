@@ -86,7 +86,7 @@ public class OnlineUsersManager implements Runnable {
 		return (onlineUsers.containsKey(nameUser));
 	}
 
-	public InetAddress getAdress(String nameUser) {
+	public InetAddress getAddress(String nameUser) {
 		if((onlineUsers.containsKey(nameUser))) {
 			return (onlineUsers.get(nameUser));
 		} else {
