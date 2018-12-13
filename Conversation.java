@@ -20,25 +20,28 @@ public class Conversation extends Frame {
 	private static Label lblRCV;
 	private Thread Tsend;
 	private Thread treceiv;
+	@SuppressWarnings( "deprecation" )
+
 	public void closeConversation(){
 		 try {
-			 distantSocket.close();
 			 // Fermeture de la découverte réseau
 			 convList.close();
-			 System.out.println("closed 1");
+			 System.out.println("closed Listener");
 			 convWrit.close();
-			 System.out.println("closed 2");
-			 distantSocket.close();
-			 System.out.println("closed 3");
+			 System.out.println("closed Writer");
 			 treceiv.stop();
 			 Tsend.stop();
+			 System.out.println("closed Stopped Listener and Writer threads");
+			 distantSocket.close();
+			 System.out.println("closed socket");
+			 
 			}
 			catch(Exception e) {
 				e.printStackTrace();
 			}
 			 // Fermeture de la fenêtre
 		    login.dispose();
-			System.out.println("closed 4");		
+			System.out.println("closed GUI");		
 	}
 
 	class MyButtonSend implements ActionListener
@@ -56,42 +59,46 @@ public class Conversation extends Frame {
       public void actionPerformed(ActionEvent e)
       {	    try {
 			 // Fermeture de la découverte réseau
-			 System.out.println("closed 0");
 			 convList.close();
-			 System.out.println("closed 1");
+			 System.out.println("closed Listener");
 			 convWrit.close();
-			 System.out.println("closed 2");
+			 System.out.println("closed Writer");
+			 treceiv.stop();
+			 Tsend.stop();
+			 System.out.println("closed Stopped Listener and Writer threads");
 			 distantSocket.close();
-			 System.out.println("closed 3");
+			 System.out.println("closed socket");
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
 			}
 			 // Fermeture de la fenêtre
 		    login.dispose();
-			System.out.println("closed 4");
+			System.out.println("closed GUI");
       }
    }
 
 	public Conversation(Socket dSocket) {
 		// partie affichage
 		login = new Dialog(this);
-        lblRCV = new Label("");
+        lblRCV = new Label("Conversation with " + distantID);
 		txtSEND = new TextField();  
 		Button sendButton = new Button("Send Message");      
 		sendButton.addActionListener(new MyButtonSend());
 		Button exit = new Button("Quit");
 		exit.addActionListener(new MyButtonExitListener());
+		Scrollbar redSlider=new Scrollbar(Scrollbar.VERTICAL, 0, 1, 0, 255);
+ 		login.add(redSlider);
 		login.setLayout(new GridLayout(0, 1));
-		login.setSize(850, 200);
+		login.setSize(850, 400);
+		login.add(lblRCV);
 		login.add(sendButton);
 		login.add(txtSEND);
-		login.add(exit);
-		login.add(lblRCV);
+		login.add(exit);	
 		login.setVisible(true);
 		// Create Sender and Receiver threads
 		this.distantSocket = dSocket;
-		convList = new ConversationListener(distantSocket, login);
+		convList = new ConversationListener(distantSocket, login, lblRCV);
 
 		treceiv = new Thread(convList);
 		treceiv.start();
@@ -109,7 +116,7 @@ public class Conversation extends Frame {
 	public void run() {
 		System.out.println("conv started");
 		while(true) {
-			if(!distantSocket.isConnected()) {
+			if(convList.isActive()) {
 				System.out.println("socket closed");
 				this.closeConversation();
 			}
