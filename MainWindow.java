@@ -16,10 +16,11 @@ public class MainWindow extends Frame
    public class onlineUpdater implements Runnable {
 		Label aLbl;
 		OnlineUsersManager networkDiscovery;
-
-		public onlineUpdater(Label lbl, OnlineUsersManager nD) {
+		ConversationManager CM;
+		public onlineUpdater(Label lbl, OnlineUsersManager nD, ConversationManager c) {
 			this.aLbl = lbl;
 			this.networkDiscovery = nD;
+			this.CM = c;
 		}
 
 		public void run() {
@@ -39,6 +40,7 @@ public class MainWindow extends Frame
 				}
 				}
 				lblOnline.setText(onlineStr);
+				CM.updatePseudos();
 			}
 		}
 
@@ -153,14 +155,16 @@ public class MainWindow extends Frame
 			Thread networkDiscoveryThread = new Thread(networkDiscovery);
 			networkDiscoveryThread.start();
 
-			onlineUpdater onlineUpdt = new onlineUpdater(lblOnline, networkDiscovery);
-			Thread onlineUpdtThread = new Thread(onlineUpdt);
-			onlineUpdtThread.start();
-
 			// Lancement du service de Messagerie
 			CM = new ConversationManager();
+			CM.setDiscovery(networkDiscovery);
 			Thread t = new Thread(CM);
 			t.start();
+
+			// Lancement du thread de màj des pseudos
+			onlineUpdater onlineUpdt = new onlineUpdater(lblOnline, networkDiscovery, CM);
+			Thread onlineUpdtThread = new Thread(onlineUpdt);
+			onlineUpdtThread.start();
 			
    }
 }

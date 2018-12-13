@@ -11,39 +11,57 @@ import java.net.InetAddress;
 public class ConversationManager implements Runnable {
 
 	private ServerSocket listenerSocket;
-	
+		
+	private OnlineUsersManager networkD;
 	int port = 8042;
 
 	private ArrayList<Conversation> activeConversation;
 
 	// Socket d'écoute qui permet de recevoir les demandes de conversation
-	public void ConversationManager() {			
+	public void ConversationManager() {				
+	}
+
+	public void setDiscovery(OnlineUsersManager d) {
+		networkD = d;
 	}
 /*
 	public Conversation createConversation(Socket mySock){
 			
 	}
 */
+	public void updatePseudos() {
+		synchronized(activeConversation) {
+		for(Conversation c : activeConversation) {
+			if(c != null) {
+				String newPseudo = (networkD.getUserFromAddress(c.getAddress()));
+				if(!newPseudo.equals(c.getPseudo())) {
+					System.out.println("Updating a pseudo in a conversation");
+					c.setPseudo(newPseudo);					
+				}
+			}
+		}
+		}
+	}
 
-
-	/* il faudra implémenter un bouton quand on appuie dessus on récupère l'inet adresse du psudo associé, puis on crée une conversation et on ajoute cette conversation dans la lisye des conversations active*/
-	public Conversation createConversation(InetAddress adressDest, int portdest) {
+	/* il faudra implémenter un bouton quand on appuie dessus on récupère l'inet adresse du psudo associé, puis on crée une conversation et on ajoute cette conversation dans la liste des conversations active */
+	public void createConversation(InetAddress adressDest, int portdest) {
 		Conversation conv = null;
 
 		try {
 			Socket mySock = new Socket(adressDest,portdest);
-			conv = new Conversation(mySock);
+			conv = new Conversation(mySock, networkD.getUserFromAddress(mySock.getInetAddress()));
 			
 		} catch (IOException e) {
 			System.err.println("Conversation not created");
 			e.printStackTrace();
 		}
-		return conv;
+		synchronized(activeConversation) {
+			this.activeConversation.add(conv); 
+		}
 	}
 	
 	public Conversation receiveConversation(Socket mySock) {
-
-		Conversation conv = new Conversation(mySock);
+		Conversation conv = new Conversation(mySock, networkD.getUserFromAddress(mySock.getInetAddress()));
 		return conv;
 	}
 
@@ -61,7 +79,9 @@ public class ConversationManager implements Runnable {
 			while(true){				
 			try {
 				Socket sock = this.listenerSocket.accept();
-				this.activeConversation.add(receiveConversation(sock)); 
+				synchronized(activeConversation) {
+					this.activeConversation.add(receiveConversation(sock)); 
+				}
 				System.out.println("Conversation created");
 			} catch (IOException e) {
 				System.err.println("Error accept socklisten");

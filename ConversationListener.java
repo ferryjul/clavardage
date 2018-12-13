@@ -13,7 +13,7 @@ import java.util.Date;
 public class ConversationListener implements Runnable {
 private BufferedReader in;
 private Socket distantSocket; 
-private Dialog dW;
+private TextArea messagesDisplay;
 private Label lblInfos;
 private boolean active;
 private boolean finished;
@@ -23,9 +23,10 @@ private boolean once = true;
 		return this.active;
 	}
 
-	public ConversationListener(Socket mysock, Dialog dialogW, Label l){
+	public ConversationListener(Socket mysock, TextArea tA, Label l){
+		this.messagesDisplay = tA;
 		this.lblInfos = l;
-		this.dW = dialogW;
+		//this.dW = dialogW;
 		this.distantSocket = mysock;
 		try {
 			this.in = new BufferedReader(new InputStreamReader(distantSocket.getInputStream()));
@@ -51,7 +52,7 @@ private boolean once = true;
 				} catch (IOException e) {
 					System.err.println("An error occured while attempting to read from socket. stopping listener loop");
 					this.active = false;
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 		if(input == null) {
 		 this.active = false;
@@ -73,8 +74,9 @@ private boolean once = true;
 			String r = receive();
 			if(r != null) {
 		  	 	 String received = "[" + (new java.util.Date()).toString() + "] " + r;	
-				 Label displ = new Label(received);                
-                 dW.add(displ);
+				/* Label displ = new Label(received);                
+                 dW.add(displ);*/
+				messagesDisplay.append(received + "\n");
                  //dW.setSize(850, dW.getHeight()+20);
 			}
 		}

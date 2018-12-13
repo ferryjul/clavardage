@@ -56,6 +56,21 @@ public class OnlineUsersManager implements Runnable {
 		
 	}
 
+	public String getUserFromAddress(InetAddress hostAddr) {
+				Set<String> usersOnTable = onlineUsers.keySet();
+				Iterator<String> it = usersOnTable.iterator();
+				String theUser = "shouldchange";
+				while(it.hasNext()) {	
+					String aUser = it.next();
+					if((onlineUsers.get(aUser)) != null) {	
+						if((onlineUsers.get(aUser)).equals(hostAddr)) {	
+							theUser = aUser;
+						}
+					}
+			 	}
+				return theUser;
+	}
+
 	public int notifyNewPseudo(String newPseudo) {
 		if((!userPseudo.equals(newPseudo)) && onlineUsers.containsKey(newPseudo)) {
 			return(-1);
@@ -141,7 +156,7 @@ public class OnlineUsersManager implements Runnable {
 			System.out.println("Error while creating DatagramSocket");
 		}
 	}
-	
+
 	public void run() {
 		System.out.println("Network Discovery active");
 		try {

@@ -1,6 +1,7 @@
 package clavardage;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,8 +21,8 @@ public class Conversation extends Frame {
 	private static Label lblRCV;
 	private Thread Tsend;
 	private Thread treceiv;
-	@SuppressWarnings( "deprecation" )
 
+	@SuppressWarnings( "deprecation" )
 	public void closeConversation(){
 		 try {
 			 // Fermeture de la découverte réseau
@@ -54,8 +55,24 @@ public class Conversation extends Frame {
       }
    }
 
+	public InetAddress getAddress() {
+		return distantSocket.getInetAddress();
+	}
+
+	public void setPseudo(String p) {
+		this.distantID = p;
+		if(convList.isActive()) {
+			lblRCV.setText("Conversation with " + distantID);
+		}
+	}
+
+	public String getPseudo() {
+		return this.distantID;
+	 }
+
 	 public class MyButtonExitListener implements ActionListener
    {
+	  @SuppressWarnings( "deprecation" )
       public void actionPerformed(ActionEvent e)
       {	    try {
 			 // Fermeture de la découverte réseau
@@ -78,8 +95,9 @@ public class Conversation extends Frame {
       }
    }
 
-	public Conversation(Socket dSocket) {
+	public Conversation(Socket dSocket, String s) {
 		// partie affichage
+		distantID = s;
 		login = new Dialog(this);
         lblRCV = new Label("Conversation with " + distantID);
 		txtSEND = new TextField();  
@@ -87,18 +105,20 @@ public class Conversation extends Frame {
 		sendButton.addActionListener(new MyButtonSend());
 		Button exit = new Button("Quit");
 		exit.addActionListener(new MyButtonExitListener());
-		Scrollbar redSlider=new Scrollbar(Scrollbar.VERTICAL, 0, 1, 0, 255);
- 		login.add(redSlider);
+		TextArea tA = new TextArea();
+
+        //scrollPane.setViewportView(lblRCV);
 		login.setLayout(new GridLayout(0, 1));
 		login.setSize(850, 400);
 		login.add(lblRCV);
 		login.add(sendButton);
 		login.add(txtSEND);
 		login.add(exit);	
+		login.add(tA);
 		login.setVisible(true);
 		// Create Sender and Receiver threads
 		this.distantSocket = dSocket;
-		convList = new ConversationListener(distantSocket, login, lblRCV);
+		convList = new ConversationListener(distantSocket, tA, lblRCV);
 
 		treceiv = new Thread(convList);
 		treceiv.start();
@@ -116,10 +136,14 @@ public class Conversation extends Frame {
 	public void run() {
 		System.out.println("conv started");
 		while(true) {
-			if(convList.isActive()) {
+			/*if(convList.isActive()) {
+				lblRCV.setText("Conversation with " + distantID);
+			}*/
+			/*if(convList.isActive()) {
 				System.out.println("socket closed");
 				this.closeConversation();
-			}
+			}*/
+			
 		}
 	}
 	
