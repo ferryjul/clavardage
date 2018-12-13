@@ -17,10 +17,7 @@ public class ConversationManager implements Runnable {
 	private ArrayList<Conversation> activeConversation;
 
 	// Socket d'écoute qui permet de recevoir les demandes de conversation
-	public void ConversationManager() {
-	
-		this.activeConversation = new ArrayList<Conversation>();
-		
+	public void ConversationManager() {			
 	}
 /*
 	public Conversation createConversation(Socket mySock){
@@ -47,20 +44,21 @@ public class ConversationManager implements Runnable {
 	public Conversation receiveConversation(Socket mySock) {
 
 		Conversation conv = new Conversation(mySock);
-		(new Thread(conv)).start();
 		return conv;
 	}
+
 	// Thread faisant tourner en continue la socket d'écoute en mode accept
 	@Override
 	public void run() {
 		try {
+			this.activeConversation = new ArrayList<Conversation>();
 			this.listenerSocket = new ServerSocket(port);
 			} catch (IOException e) {
 			System.err.println("Listen socket not created");
 			e.printStackTrace();
 			}
-			while(true){
-				System.out.print("Je suis dans le run de conversation Manager \n");  
+			System.out.print("Conversation Manager launched \n");  
+			while(true){				
 			try {
 				Socket sock = this.listenerSocket.accept();
 				this.activeConversation.add(receiveConversation(sock)); 

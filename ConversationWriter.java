@@ -12,6 +12,7 @@ public class ConversationWriter implements Runnable {
 
 	private Socket distantSocket; 
 	private PrintWriter out;
+	private boolean active;
 
 	public ConversationWriter(Socket mysock){
 		this.distantSocket = mysock;	
@@ -21,6 +22,10 @@ public class ConversationWriter implements Runnable {
 			System.err.println("Error creating listener (for conversation)");
 			e.printStackTrace();
 		}
+	}
+
+	public void close() {
+		this.active = false;
 	}
 
 	public void send(String msg) {
@@ -35,6 +40,9 @@ public class ConversationWriter implements Runnable {
 
 	@Override
 	public void run() {
-		// Nothing		
+		this.active = true;
+		while(active) {
+			
+		}	
 	}
 }

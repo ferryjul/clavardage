@@ -52,7 +52,7 @@ public class MainWindow extends Frame
    private static OnlineUsersManager networkDiscovery;
    private static TextField txtNewPseudo;
    private static TextField openConvWith;
-
+   private static ConversationManager CM;
    class MyButtonChatListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
@@ -71,6 +71,7 @@ public class MainWindow extends Frame
 		else {
 			InetAddress hostAddress = networkDiscovery.getAddress(distantUser);
 			System.out.println("Beginning communication with " + distantUser + " at @" + hostAddress);
+			CM.createConversation(hostAddress,8042);
 		}
       }
    }
@@ -156,6 +157,10 @@ public class MainWindow extends Frame
 			Thread onlineUpdtThread = new Thread(onlineUpdt);
 			onlineUpdtThread.start();
 
+			// Lancement du service de Messagerie
+			CM = new ConversationManager();
+			Thread t = new Thread(CM);
+			t.start();
 			
    }
 }
