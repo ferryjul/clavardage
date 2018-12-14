@@ -56,10 +56,12 @@ public class ConversationManager implements Runnable {
 		try {
 			Socket mySock = new Socket(adressDest,portdest);
 			String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
-			conv = new Conversation(mySock, 
-			historyM.createHistory(idHost, 
-									   (idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
+			synchronized(historyM) {
+				conv = new Conversation(mySock, 
+				historyM.createHistory(idHost, 
+									   ("Conversation with " + idHost + " (date : " + (new java.util.Date()).toString() + ")"), new java.util.Date()), 
 			idHost);
+			}
 			
 		} catch (IOException e) {
 			System.err.println("Conversation not created");
@@ -72,12 +74,24 @@ public class ConversationManager implements Runnable {
 	
 	public Conversation receiveConversation(Socket mySock) {
 		String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
-		Conversation conv = new Conversation(mySock, 
-			historyM.createHistory(idHost, 
-		    (idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
-			idHost);
+		Conversation conv;
+		synchronized(historyM) {
+			conv = new Conversation(mySock, 
+				historyM.createHistory(idHost, 
+				(idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
+				idHost);
+		}
 		return conv;
 	}
+
+/*	public void closeCM() {
+		try {
+			listenerSocket.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}*/
 
 	// Thread faisant tourner en continue la socket d'écoute en mode accept
 	@Override

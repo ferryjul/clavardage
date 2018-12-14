@@ -8,6 +8,7 @@ import java.lang.Thread;
 import java.util.Set;
 import java.util.Iterator;
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Frame
@@ -56,6 +57,29 @@ public class MainWindow extends Frame
    private static TextField openConvWith;
    private static ConversationManager CM;
    private static HistoryManager HM;
+
+	class DisplayHistory implements Runnable {
+
+		public void setList(ArrayList<String> l) {
+			HistoryDisplayWindow w = new HistoryDisplayWindow(l);
+		}		
+
+		public void run() {
+			
+		}
+	}
+
+	class MyButtonHistListener implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+		System.out.println("Creating an history display window");
+		DisplayHistory d = new DisplayHistory();
+		d.setList((new HistoryManager()).listAllHist());
+		Thread thrD = new Thread(d);
+		thrD.start();
+      }
+   }
 
    class MyButtonChatListener implements ActionListener
    {
@@ -116,6 +140,9 @@ public class MainWindow extends Frame
 		  networkDiscovery.notifyOffline();
 		  networkDiscovery.closeCommunications();	 
 		 }
+		/* synchronized(CM) {
+			CM.closeCM();
+		 }*/
          login.dispose();
          System.exit(0);
       }
@@ -124,6 +151,7 @@ public class MainWindow extends Frame
    public MainWindow(String userName)
    {
 			// Création de la fenêtre graphique
+			this.setTitle("Chat Room");
       		currentUserName = userName;    
             login = new Dialog(this);
             lblInput = new Label("Welcome " + currentUserName
@@ -140,7 +168,9 @@ public class MainWindow extends Frame
 			changePseudo.addActionListener(new MyButtonChangePseudo());
             chat.addActionListener(new MyButtonChatListener());
             Button exit = new Button("Quit");
-            exit.addActionListener(new MyButtonExitListener());
+			exit.addActionListener(new MyButtonExitListener());
+			Button displayHist = new Button("Display all available histories");
+            displayHist.addActionListener(new MyButtonHistListener());
             login.setSize(850, 200);
             login.add(lblInput);
             login.add(lblOnline);    
@@ -150,6 +180,7 @@ public class MainWindow extends Frame
 			login.add(changePseudo);
 			login.add(txtNewPseudo);
 			login.add(lblPseudoError);
+			login.add(displayHist);
             login.setVisible(true);
 
 			// Lancement de la découverte Réseau
@@ -161,7 +192,6 @@ public class MainWindow extends Frame
 			HistoryManager HM = new HistoryManager();
 			Thread historyManagerThread = new Thread(HM);
 			historyManagerThread.start();	
-
 
 			// Lancement du service de Messagerie
 			CM = new ConversationManager();

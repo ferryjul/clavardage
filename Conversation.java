@@ -16,9 +16,9 @@ public class Conversation extends Frame {
 	private History currentHistory;
 
 	// Composants Graphiques
-	private static TextField txtSEND;	
+	private TextField txtSEND;	
 	private Dialog login;
-	private static Label lblRCV;
+	private Label lblRCV;
 	private Thread Tsend;
 	private Thread treceiv;
 
@@ -42,6 +42,7 @@ public class Conversation extends Frame {
 			}
 			// Fermeture de l'historique
 			currentHistory.closeHistory();
+			System.out.println("Closed History");
 			 // Fermeture de la fenêtre
 		    login.dispose();
 			System.out.println("closed GUI");		
@@ -51,9 +52,11 @@ public class Conversation extends Frame {
    {
       public void actionPerformed(ActionEvent e)
       {
-		String toBeSent = txtSEND.getText();
-		txtSEND.setText("");
-		convWrit.send(toBeSent);
+		if(convList.isActive()) {
+			String toBeSent = txtSEND.getText();
+			txtSEND.setText("");
+			convWrit.send(toBeSent);
+		}
       }
    }
 
@@ -93,6 +96,7 @@ public class Conversation extends Frame {
 			}
 			// Fermeture de l'historique
 			currentHistory.closeHistory();
+			System.out.println("Closed History");
 			 // Fermeture de la fenêtre
 		    login.dispose();
 			System.out.println("closed GUI");

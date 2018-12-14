@@ -10,6 +10,7 @@ public class Run extends Frame
 {
    private static Run r;
    private static Label lblInfo;
+   private static Label lblError;
    private Dialog login;
    private TextField box;
 
@@ -17,8 +18,13 @@ public class Run extends Frame
    {
       public void actionPerformed(ActionEvent e)
       {
-		new MainWindow(box.getText());
-		r.dispose();
+		String wantedPseudo = box.getText();
+		if(wantedPseudo.equals("")) {
+			lblError.setText("Impossible to login in with an empty pseudo !");
+		} else {
+			new MainWindow(wantedPseudo);
+			r.dispose();
+		}
       }
    }
 
@@ -33,8 +39,10 @@ public class Run extends Frame
 
    public Run()
    {
+			this.setTitle("Chat Room");
 			box = new TextField();
             login = new Dialog(this);
+			lblError = new Label("");
             lblInfo = new Label("Welcome. Enter your pseudo please.",
                   Label.CENTER); // Construct by invoking a constructor via the new
                                  // operator
@@ -45,6 +53,7 @@ public class Run extends Frame
             exit.addActionListener(new MyButtonExitListener());
             login.setSize(850, 200);
             login.add(lblInfo);   
+			login.add(lblError);
 			login.add(box);
             login.add(validate);   
             login.add(exit);    
