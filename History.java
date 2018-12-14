@@ -18,12 +18,12 @@ public class History {
 	{
 		this.sessionDate = connectDate;
 		this.id = idDist;
-		this.fileHist = new File(./histories/fileName);
+		this.fileHist = new File("histories/"+fileName);
 
 		try{
 			fWrit = new FileWriter(fileHist, true);
-			fWrit.write("--@ Pseudo :" + id + "\n");
-			fWrit.write("Date de la session de conversation :" + sessionDate.toString() + "\n");
+			fWrit.write("----- Pseudo :" + id + "-----\n");
+			fWrit.write("----- Date de la session de conversation :" + sessionDate.toString() + "-----\n");
 			fWrit.flush();
 		} catch (IOException e){
 			System.err.println("Create FileWRITER FAIL");
@@ -32,12 +32,23 @@ public class History {
 			
 	}
 
-	public void updateHist(String msg) {
+	public synchronized void updateHist(String msg) {
 		try{
-			fWrit.write(msg+"\n");
+			fWrit.write("-- "+msg+"\n");
 			fWrit.flush();
 		} catch (IOException e){
 			System.err.println("update history fail");
+			e.printStackTrace();
+		}
+	}
+
+		public void closeHistory() {
+		try{
+			fWrit.write("----- FIN session de conversation :" + (new java.util.Date()).toString() + "-----\n");
+			fWrit.close();
+			
+		} catch (IOException e){
+			System.err.println("close file write failed");
 			e.printStackTrace();
 		}
 	}
