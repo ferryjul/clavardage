@@ -34,7 +34,7 @@ public class History {
 			
 	}
 
-	public void updateHist(String msg) {
+	public synchronized void updateHist(String msg) {
 		try{
 			fWrit.write("-- "+msg+"\n");
 			fWrit.flush();
@@ -46,6 +46,7 @@ public class History {
 
 		public void closeHistory() {
 		try{
+			fWrit.write("----- FIN session de conversation :" + (new java.util.Date()).toString() + "-----\n");
 			fWrit.close();
 			
 		} catch (IOException e){
