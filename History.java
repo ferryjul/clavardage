@@ -34,7 +34,7 @@ public class History {
 
 	public synchronized void updateHist(String msg) {
 		try{
-			fWrit.write("-- "+msg+"\n");
+			fWrit.write(msg+"\n");
 			fWrit.flush();
 		} catch (IOException e){
 			System.err.println("update history fail");

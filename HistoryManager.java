@@ -3,6 +3,9 @@ package clavardage;
 import java.util.Date;
 import java.util.ArrayList;
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
 
 public class HistoryManager implements Runnable{
 
@@ -33,6 +36,25 @@ public class HistoryManager implements Runnable{
 		
 	}
 
+	public ArrayList<String> readHistory(String fileName)
+	{
+		File fileHist = new File("histories/"+fileName);
+		BufferedReader lecteurAvecBuffer = null;
+		ArrayList<String> listHist = new ArrayList<String>();
+    	String ligne;
+		try{
+		lecteurAvecBuffer = new BufferedReader(new FileReader(fileHist));
+		while ((ligne = lecteurAvecBuffer.readLine()) != null){
+      		listHist.add(ligne);
+			}
+
+      	} catch(IOException e)
+      	{
+		System.out.println("Erreur readHistory");
+      	}
+   
+		return listHist;
+	}
 	
 
 }
