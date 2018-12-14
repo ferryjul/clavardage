@@ -54,10 +54,10 @@ public class ConversationManager implements Runnable {
 		Conversation conv = null;
 
 		try {
-			String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
 			Socket mySock = new Socket(adressDest,portdest);
+			String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
 			conv = new Conversation(mySock, 
-			historyM.createConversation(idHost, 
+			historyM.createHistory(idHost, 
 									   (idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
 			idHost);
 			
@@ -71,7 +71,11 @@ public class ConversationManager implements Runnable {
 	}
 	
 	public Conversation receiveConversation(Socket mySock) {
-		Conversation conv = new Conversation(mySock, networkD.getUserFromAddress(mySock.getInetAddress()));
+		String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
+		Conversation conv = new Conversation(mySock, 
+			historyM.createHistory(idHost, 
+		    (idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
+			idHost);
 		return conv;
 	}
 

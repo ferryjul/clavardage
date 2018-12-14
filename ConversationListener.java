@@ -18,12 +18,14 @@ private Label lblInfos;
 private boolean active;
 private boolean finished;
 private boolean once = true;
+private History myHist;
 
 	public boolean isActive() {
 		return this.active;
 	}
 
-	public ConversationListener(Socket mysock, TextArea tA, Label l){
+	public ConversationListener(Socket mysock, TextArea tA, Label l, History h){
+		this.myHist = h;
 		this.messagesDisplay = tA;
 		this.lblInfos = l;
 		//this.dW = dialogW;
@@ -76,7 +78,10 @@ private boolean once = true;
 		  	 	 String received = "[" + (new java.util.Date()).toString() + "] " + r;	
 				/* Label displ = new Label(received);                
                  dW.add(displ);*/
-				messagesDisplay.append(received + "\n");
+				synchronized(messagesDisplay) {
+					messagesDisplay.append("Received: " + received + "\n");
+				}
+				myHist.updateHist("Received: " + received);
                  //dW.setSize(850, dW.getHeight()+20);
 			}
 		}

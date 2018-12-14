@@ -13,7 +13,7 @@ public class Conversation extends Frame {
 	private Socket distantSocket;
 	private ConversationListener convList;
 	private ConversationWriter convWrit;
-	private History currentHistory
+	private History currentHistory;
 
 	// Composants Graphiques
 	private static TextField txtSEND;	
@@ -40,6 +40,8 @@ public class Conversation extends Frame {
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+			// Fermeture de l'historique
+			currentHistory.closeHistory();
 			 // Fermeture de la fenêtre
 		    login.dispose();
 			System.out.println("closed GUI");		
@@ -89,6 +91,8 @@ public class Conversation extends Frame {
 			catch(Exception ex) {
 				ex.printStackTrace();
 			}
+			// Fermeture de l'historique
+			currentHistory.closeHistory();
 			 // Fermeture de la fenêtre
 		    login.dispose();
 			System.out.println("closed GUI");
@@ -107,8 +111,6 @@ public class Conversation extends Frame {
 		Button exit = new Button("Quit");
 		exit.addActionListener(new MyButtonExitListener());
 		TextArea tA = new TextArea();
-
-        //scrollPane.setViewportView(lblRCV);
 		login.setLayout(new GridLayout(0, 1));
 		login.setSize(850, 400);
 		login.add(lblRCV);
@@ -117,14 +119,15 @@ public class Conversation extends Frame {
 		login.add(exit);	
 		login.add(tA);
 		login.setVisible(true);
-		// Create Sender and Receiver threads
-		this.distantSocket = dSocket;
-		convList = new ConversationListener(distantSocket, tA, lblRCV);
 
+		this.distantSocket = dSocket;
+
+		// Create Sender and Receiver threads		
+		convList = new ConversationListener(distantSocket, tA, lblRCV, currentHistory);
 		treceiv = new Thread(convList);
 		treceiv.start();
 
-		convWrit = new ConversationWriter(this.distantSocket);
+		convWrit = new ConversationWriter(this.distantSocket, tA, currentHistory);
 		Tsend = new Thread(convList);
 		Tsend.start();
 		System.out.println("conv created");
