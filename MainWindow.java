@@ -55,6 +55,8 @@ public class MainWindow extends Frame
    private static TextField txtNewPseudo;
    private static TextField openConvWith;
    private static ConversationManager CM;
+   private static HistoryManager HM;
+
    class MyButtonChatListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
@@ -149,15 +151,22 @@ public class MainWindow extends Frame
 			login.add(txtNewPseudo);
 			login.add(lblPseudoError);
             login.setVisible(true);
-		
+
 			// Lancement de la découverte Réseau
 			networkDiscovery = new OnlineUsersManager(userName);
 			Thread networkDiscoveryThread = new Thread(networkDiscovery);
 			networkDiscoveryThread.start();
 
+			// Création du gestionnaire d'historique
+			HistoryManager HM = new HistoryManager();
+			Thread historyManagerThread = new Thread(HM);
+			historyManagerThread.start();	
+
+
 			// Lancement du service de Messagerie
 			CM = new ConversationManager();
 			CM.setDiscovery(networkDiscovery);
+			CM.setHistoryM(HM);
 			Thread t = new Thread(CM);
 			t.start();
 

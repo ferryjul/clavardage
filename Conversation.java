@@ -13,7 +13,7 @@ public class Conversation extends Frame {
 	private Socket distantSocket;
 	private ConversationListener convList;
 	private ConversationWriter convWrit;
-	// private History currentHistory
+	private History currentHistory
 
 	// Composants Graphiques
 	private static TextField txtSEND;	
@@ -70,7 +70,7 @@ public class Conversation extends Frame {
 		return this.distantID;
 	 }
 
-	 public class MyButtonExitListener implements ActionListener
+   public class MyButtonExitListener implements ActionListener
    {
 	  @SuppressWarnings( "deprecation" )
       public void actionPerformed(ActionEvent e)
@@ -95,9 +95,10 @@ public class Conversation extends Frame {
       }
    }
 
-	public Conversation(Socket dSocket, String s) {
+	public Conversation(Socket dSocket, History hist, String s) {
 		// partie affichage
 		distantID = s;
+		this.currentHistory = hist;
 		login = new Dialog(this);
         lblRCV = new Label("Conversation with " + distantID);
 		txtSEND = new TextField();  

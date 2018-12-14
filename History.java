@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileWriter;
 
-
 public class History {
 
 	private String id;
@@ -15,12 +14,11 @@ public class History {
 	private Date sessionDate;
 	private FileWriter fWrit;
 
-
 	public History(String idDist , String fileName, Date connectDate)
 	{
 		this.sessionDate = connectDate;
 		this.id = idDist;
-		this.fileHist = new File(fileName);
+		this.fileHist = new File(./histories/fileName);
 
 		try{
 			fWrit = new FileWriter(fileHist, true);
@@ -43,9 +41,5 @@ public class History {
 			e.printStackTrace();
 		}
 	}
-
-
-
-	
 
 }
