@@ -10,11 +10,13 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.util.Date;
 
+import javax.swing.JLabel;
+
 public class ConversationListener implements Runnable {
 private BufferedReader in;
 private Socket distantSocket; 
 private TextArea messagesDisplay;
-private Label lblInfos;
+private JLabel lblInfos;
 private boolean active;
 private boolean finished;
 private boolean once = true;
@@ -24,7 +26,7 @@ private History myHist;
 		return this.active;
 	}
 
-	public ConversationListener(Socket mysock, TextArea tA, Label l, History h){
+	public ConversationListener(Socket mysock, TextArea tA, JLabel l, History h){
 		this.myHist = h;
 		this.messagesDisplay = tA;
 		this.lblInfos = l;

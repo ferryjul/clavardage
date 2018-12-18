@@ -4,12 +4,18 @@ import java.awt.*;
 import java.util.ArrayList ;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
-public class HistoryDisplayWindow extends Frame
+public class HistoryDisplayWindow extends JFrame
 {
    private ArrayList<String> filesList;
-   private Label lblInput;
-   private Dialog login;
+   private JLabel lblInput;
+   private JDialog login;
 
    public class MyButtonExitListener implements ActionListener
    {
@@ -36,29 +42,33 @@ public class HistoryDisplayWindow extends Frame
 
 	public HistoryDisplayWindow(ArrayList<String> l)
 	{
+	   this.setTitle("List of stored histories");
 		this.filesList = l;
-        login = new Dialog(this);
-        lblInput = new Label("List of all available history files for this user of the computer :",
-              Label.CENTER);
+        login = new JDialog(this);
+        lblInput = new JLabel("List of all available history files for this user of the computer :",
+              JLabel.CENTER);
         login.setLayout(new GridLayout(0, 1));   
 
-        Button exit = new Button("Quit");
+        JButton exit = new JButton("Quit");
 		exit.addActionListener(new MyButtonExitListener());
-
+		   JPanel myPannel = new JPanel(new GridLayout(0, 1));
         login.setSize(850, 200);
         login.add(lblInput);
 		if(!l.isEmpty()) {
 			for(String anHist : l) {
-				Button displayHist = new Button("Display " + anHist);
+				JButton displayHist = new JButton("Display " + anHist);
 				displayHist.addActionListener(new MyButtonHistListener(anHist));
-        		login.add(displayHist);
-				login.setSize(850, login.getHeight()+20);
+				myPannel.add(displayHist);
+        		//login.add(displayHist);
+				//login.setSize(850, login.getHeight()+20);
 			}
 		}
 		else {
 			Label ll = new Label("No history found");
 			login.add(ll);
 		}
+		JScrollPane sB = new JScrollPane(myPannel);
+		login.add(sB);
 		login.add(exit);    
 		login.setVisible(true);
 	}

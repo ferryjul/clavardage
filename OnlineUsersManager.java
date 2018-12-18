@@ -27,6 +27,7 @@ public class OnlineUsersManager implements Runnable {
 	byte[] sendBuf;
 	byte[] rcvBuf = new byte[256];
 	private boolean isActiveManager = false;
+	private boolean hasBeenModified = true;
 	String message;
 
 	public int notifyOnline() {	
@@ -46,7 +47,8 @@ public class OnlineUsersManager implements Runnable {
 		sendBuf = message.getBytes();
 		myPacket = new DatagramPacket(sendBuf, sendBuf.length, broadcastAddress, 4444);
 		System.out.println("sending : " + message);
-		socket.send(myPacket);
+		socket.send(myPacket);  
+		hasBeenModified = true;
 		return 0;
 		}
 		catch(Exception e) {
@@ -110,9 +112,13 @@ public class OnlineUsersManager implements Runnable {
 	}
 
 	public Set<String> getOnlineUsers() {
-		synchronized(onlineUsers) {
-		return onlineUsers.keySet();
-		}
+	   if(hasBeenModified == true) {
+	      hasBeenModified = false;
+   		synchronized(onlineUsers) {
+   		return onlineUsers.keySet();
+   		}
+	   }
+	   return null;
 	}
 	
 	public void closeCommunications() { // To properly close the socket
@@ -165,7 +171,8 @@ public class OnlineUsersManager implements Runnable {
 			String received = new String(rcvPacket.getData(), 0, rcvPacket.getLength());
 			System.out.println("received :" + received);
 			if(!userPseudo.equals(received.substring(6))) { //!(rcvPacket.getAddress()).equals("localhost")
-				if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne
+				if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne*
+				   hasBeenModified = true;
 					System.out.println(received.substring(6) + " is online");
 					synchronized(onlineUsers) {
 					onlineUsers.put(received.substring(6),rcvPacket.getAddress());
@@ -177,6 +184,7 @@ public class OnlineUsersManager implements Runnable {
 					socket.send(myPacket);
 				}
 				if((received.substring(0,6)).equals("[011]_")) { //Déclaration utilisateur en ligne
+				   hasBeenModified = true;
 					System.out.println(received.substring(6) + " is already online");
 					synchronized(onlineUsers) {
 					if(!onlineUsers.containsKey(received.substring(6))) {
@@ -185,12 +193,14 @@ public class OnlineUsersManager implements Runnable {
 					}
 				}
 				if((received.substring(0,6)).equals("[002]_")) { //Déclaration déconnexion utilisateur
+				   hasBeenModified = true;
 					System.out.println(received.substring(6) + " is deconnected");
 					synchronized(onlineUsers) {			
 						onlineUsers.remove(received.substring(6));
 					}
 				}
 				if((received.substring(0,6)).equals("[021]_")) { //Déclaration changement de pseudo
+				   hasBeenModified = true;
 					// Find corresponding old pseudo
 					try {
 						InetAddress hostAddr = rcvPacket.getAddress();

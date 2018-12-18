@@ -5,12 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
 @SuppressWarnings("serial")
 public class Run extends Frame
 {
    private static Run r;
-   private static Label lblInfo;
-   private static Label lblError;
+   private static JLabel lblInfo;
+   private static JLabel lblError;
    private Dialog login;
    private TextField box;
 
@@ -42,14 +45,14 @@ public class Run extends Frame
 			this.setTitle("Chat Room");
 			box = new TextField();
             login = new Dialog(this);
-			lblError = new Label("");
-            lblInfo = new Label("Welcome. Enter your pseudo please.",
-                  Label.CENTER); // Construct by invoking a constructor via the new
+			lblError = new JLabel("");
+            lblInfo = new JLabel("Welcome. Enter your pseudo please.",
+                  JLabel.CENTER); // Construct by invoking a constructor via the new
                                  // operator
             login.setLayout(new GridLayout(0, 1));
-            Button validate = new Button("Validate Pseudo");        
+            JButton validate = new JButton("Validate Pseudo");        
             validate.addActionListener(new MyButtonValidateListener());
-            Button exit = new Button("Quit");
+            JButton exit = new JButton("Quit");
             exit.addActionListener(new MyButtonExitListener());
             login.setSize(850, 200);
             login.add(lblInfo);   

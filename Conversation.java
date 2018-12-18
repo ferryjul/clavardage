@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +21,7 @@ public class Conversation extends Frame {
 	// Composants Graphiques
 	private TextField txtSEND;	
 	private Dialog login;
-	private Label lblRCV;
+	private JLabel lblRCV;
 	private Thread Tsend;
 	private Thread treceiv;
 
@@ -108,7 +111,7 @@ public class Conversation extends Frame {
 		distantID = s;
 		this.currentHistory = hist;
 		login = new Dialog(this);
-        lblRCV = new Label("Conversation with " + distantID);
+        lblRCV = new JLabel("Conversation with " + distantID);
 		txtSEND = new TextField();  
 		Button sendButton = new Button("Send Message");      
 		sendButton.addActionListener(new MyButtonSend());
