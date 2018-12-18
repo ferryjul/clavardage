@@ -15,10 +15,13 @@ import java.util.Iterator;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 @SuppressWarnings("serial")
 public class MainWindow extends Frame {
 
-   public class onlineUpdater implements Runnable {
+   public class onlineUpdater extends TimerTask {
       JPanel aP;
       OnlineUsersManager networkDiscovery;
       ConversationManager CM;
@@ -31,10 +34,10 @@ public class MainWindow extends Frame {
       }
 
       public void run() {
-         while (true) {
             Set<String> usersSet = networkDiscovery.getOnlineUsers();
+			//System.out.println("updating pseudos...");
             if (usersSet != null) { // Test if we have modifications to be done
-               // aP.removeAll();
+               aP.removeAll();
                Iterator<String> it = usersSet.iterator();
                JLabel jl = new JLabel("-------- Currently Online Users : --------");
                aP.add(jl);
@@ -47,7 +50,7 @@ public class MainWindow extends Frame {
                   }
                }
                CM.updatePseudos();
-            }
+			   aP.updateUI();
          }
       }
 
@@ -199,10 +202,13 @@ public class MainWindow extends Frame {
       t.start();
 
       // Lancement du thread de màj des pseudos
-      onlineUpdater onlineUpdt = new onlineUpdater(panelOnline,
-            networkDiscovery, CM);
-      Thread onlineUpdtThread = new Thread(onlineUpdt);
-      onlineUpdtThread.start();
+	   Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new onlineUpdater(panelOnline,
+            networkDiscovery, CM),
+                   0,   //initial delay
+                   500);  //subsequent rate
+      //Thread onlineUpdtThread = new Thread(onlineUpdt);
+      //onlineUpdtThread.start();
 
    }
 }

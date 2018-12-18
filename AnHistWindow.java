@@ -37,7 +37,7 @@ public class AnHistWindow extends Frame
 		msgDisplay.setRows(10);
         JButton exit = new JButton("Quit");
 		exit.addActionListener(new MyButtonExitListener());
-        login.setSize(850, 200);
+        login.setSize(850, 450);
         login.add(lblInput);
 		login.add(lbl2);
 		login.add(msgDisplay);

@@ -7,7 +7,7 @@ import java.net.DatagramPacket;
 import java.lang.String;
 import java.util.Set;
 import java.util.Iterator;
-
+import java.util.HashSet;
 /*
 Conventions (types de messages)
 -> Se déclarer en ligne : [001]_Pseudo
@@ -27,13 +27,14 @@ public class OnlineUsersManager implements Runnable {
 	byte[] sendBuf;
 	byte[] rcvBuf = new byte[256];
 	private boolean isActiveManager = false;
-	private boolean hasBeenModified = true;
+	private Boolean hasBeenModified = true;
 	String message;
 
 	public int notifyOnline() {	
 		try {
 			System.out.println("sending : " + message);
 			socket.send(myPacket);
+			this.hasBeenModified = true;
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -48,7 +49,6 @@ public class OnlineUsersManager implements Runnable {
 		myPacket = new DatagramPacket(sendBuf, sendBuf.length, broadcastAddress, 4444);
 		System.out.println("sending : " + message);
 		socket.send(myPacket);  
-		hasBeenModified = true;
 		return 0;
 		}
 		catch(Exception e) {
@@ -80,6 +80,7 @@ public class OnlineUsersManager implements Runnable {
 		if(userPseudo.equals(newPseudo)) {
 			return(-2);
 		}
+		this.hasBeenModified = true;
 		synchronized(onlineUsers) {
 			onlineUsers.remove(userPseudo);
 			this.userPseudo = newPseudo;
@@ -112,13 +113,18 @@ public class OnlineUsersManager implements Runnable {
 	}
 
 	public Set<String> getOnlineUsers() {
-	   if(hasBeenModified == true) {
-	      hasBeenModified = false;
+	   /* if(hasBeenModified == true) {
+	      synchronized(this.hasBeenModified) {
+			this.hasBeenModified = false;
+		   }*/
    		synchronized(onlineUsers) {
-   		return onlineUsers.keySet();
+			Set<String> s = new HashSet<String>(onlineUsers.keySet());
+   			return s;
    		}
-	   }
-	   return null;
+	 /*  }
+	   else {
+	   	return null;
+		}*/
 	}
 	
 	public void closeCommunications() { // To properly close the socket
@@ -172,7 +178,9 @@ public class OnlineUsersManager implements Runnable {
 			System.out.println("received :" + received);
 			if(!userPseudo.equals(received.substring(6))) { //!(rcvPacket.getAddress()).equals("localhost")
 				if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne*
-				   hasBeenModified = true;
+				 	synchronized(this.hasBeenModified) {
+				    	this.hasBeenModified = true;
+					}
 					System.out.println(received.substring(6) + " is online");
 					synchronized(onlineUsers) {
 					onlineUsers.put(received.substring(6),rcvPacket.getAddress());
@@ -184,7 +192,9 @@ public class OnlineUsersManager implements Runnable {
 					socket.send(myPacket);
 				}
 				if((received.substring(0,6)).equals("[011]_")) { //Déclaration utilisateur en ligne
-				   hasBeenModified = true;
+				    synchronized(this.hasBeenModified) {
+				    	this.hasBeenModified = true;
+					}
 					System.out.println(received.substring(6) + " is already online");
 					synchronized(onlineUsers) {
 					if(!onlineUsers.containsKey(received.substring(6))) {
@@ -193,20 +203,23 @@ public class OnlineUsersManager implements Runnable {
 					}
 				}
 				if((received.substring(0,6)).equals("[002]_")) { //Déclaration déconnexion utilisateur
-				   hasBeenModified = true;
+				    synchronized(this.hasBeenModified) {
+				    	this.hasBeenModified = true;
+					}
 					System.out.println(received.substring(6) + " is deconnected");
 					synchronized(onlineUsers) {			
 						onlineUsers.remove(received.substring(6));
 					}
 				}
 				if((received.substring(0,6)).equals("[021]_")) { //Déclaration changement de pseudo
-				   hasBeenModified = true;
+				    this.hasBeenModified = true;
 					// Find corresponding old pseudo
 					try {
 						InetAddress hostAddr = rcvPacket.getAddress();
 						Set<String> usersOnTable = onlineUsers.keySet();
 						Iterator<String> it = usersOnTable.iterator();
 						String theUser = "shouldchange";
+						this.hasBeenModified = true;
 						while(it.hasNext()) {	
 								String aUser = it.next();
 								if((onlineUsers.get(aUser)) != null) {	
