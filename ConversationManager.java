@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.net.InetAddress;
 import java.util.Date;
-
+import java.util.Iterator;
 
 public class ConversationManager implements Runnable {
 
@@ -52,24 +52,41 @@ public class ConversationManager implements Runnable {
 	/* il faudra implémenter un bouton quand on appuie dessus on récupère l'inet adresse du psudo associé, puis on crée une conversation et on ajoute cette conversation dans la liste des conversations active */
 	public void createConversation(InetAddress adressDest, int portdest) {
 		Conversation conv = null;
-
+		boolean notcreated = true ;
 		try {
-			Socket mySock = new Socket(adressDest,portdest);
-			String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
-			synchronized(historyM) {
-				conv = new Conversation(mySock, 
-				historyM.createHistory(idHost, 
-									   ("Conversation with " + idHost + " (date : " + (new java.util.Date()).toString() + ")"), new java.util.Date()), 
-			idHost);
+			Iterator<Conversation> iterator = activeConversation.iterator();
+
+			while (iterator.hasNext()) {
+				Conversation ctest = iterator.next();
+				if(ctest.isActive() && ctest.getAddress().equals(adressDest)){
+					notcreated = false;
+				}
 			}
+				
+			if (notcreated)
+			{
+				Socket mySock = new Socket(adressDest,portdest);
+				String idHost = networkD.getUserFromAddress(mySock.getInetAddress());
+				synchronized(historyM) {
+					conv = new Conversation(mySock, 
+					historyM.createHistory(idHost, 
+										   ("Conversation with " + idHost + " (date : " + (new java.util.Date()).toString() + ")"), new java.util.Date()), 
+				idHost);
+				}
 			
-		} catch (IOException e) {
-			System.err.println("Conversation not created");
-			e.printStackTrace();
-		}
-		synchronized(activeConversation) {
-			this.activeConversation.add(conv); 
-		}
+				synchronized(activeConversation) {
+					this.activeConversation.add(conv); 
+				}
+			}
+			else{
+				System.out.println("Conversation déjà crée");
+			}
+
+		}catch (IOException e) {
+				System.err.println("Conversation not created");
+				e.printStackTrace();
+			}
+
 	}
 	
 	public Conversation receiveConversation(Socket mySock) {

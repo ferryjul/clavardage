@@ -17,6 +17,7 @@ public class Conversation extends Frame {
 	private ConversationListener convList;
 	private ConversationWriter convWrit;
 	private History currentHistory;
+	private boolean isActive;
 
 	// Composants Graphiques
 	private TextField txtSEND;	
@@ -28,6 +29,7 @@ public class Conversation extends Frame {
 	@SuppressWarnings( "deprecation" )
 	public void closeConversation(){
 		 try {
+			 isActive = false;
 			 // Fermeture de la découverte réseau
 			 convList.close();
 			 System.out.println("closed Listener");
@@ -78,6 +80,11 @@ public class Conversation extends Frame {
 		return this.distantID;
 	 }
 
+	public boolean isActive() {
+		return this.isActive;
+	 }
+
+
    public class MyButtonExitListener implements ActionListener
    {
 	  @SuppressWarnings( "deprecation" )
@@ -108,6 +115,7 @@ public class Conversation extends Frame {
 
 	public Conversation(Socket dSocket, History hist, String s) {
 		// partie affichage
+		isActive = true;
 		distantID = s;
 		this.currentHistory = hist;
 		login = new Dialog(this);
