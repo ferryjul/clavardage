@@ -179,81 +179,81 @@ public class OnlineUsersManager implements Runnable {
 			socket.receive(rcvPacket);
 			String received = new String(rcvPacket.getData(), 0, rcvPacket.getLength());
 			System.out.println("received :" + received);
-			if(received.length()>5) {
-			if(!userPseudo.equals(received.substring(6))) { //!(rcvPacket.getAddress()).equals("localhost")
-				if((received.substring(0,5)).equals("[000]")) { //Demande des pseudos en ligne
-					message = new String("[011]_" + userPseudo); //Réponse à un utilisateur en ligne
+			if(received.length()>4) {
+			if(received.equals("[000]")) { //Demande des pseudos en ligne
+					message = new String("[011]_" + userPseudo); //Réponse à une demande de pseudos en ligne
 					sendBuf = message.getBytes();
 					myPacket = new DatagramPacket(sendBuf, sendBuf.length, broadcastAddress, 4444);
 					System.out.println("sending : " + message);
 					socket.send(myPacket);
-				} else {
-					if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne
-					 	synchronized(this.hasBeenModified) {
-							this.hasBeenModified = true;
-						}
-						System.out.println(received.substring(6) + " is online");
-						synchronized(onlineUsers) {
-						onlineUsers.put(received.substring(6),rcvPacket.getAddress());
-						}
-						message = new String("[011]_" + userPseudo); //Réponse à un utilisateur en ligne
-						sendBuf = message.getBytes();
-						myPacket = new DatagramPacket(sendBuf, sendBuf.length, broadcastAddress, 4444);
-						System.out.println("sending : " + message);
-						socket.send(myPacket);
-					}
-					if((received.substring(0,6)).equals("[011]_")) { //Déclaration utilisateur en ligne
-						synchronized(this.hasBeenModified) {
-							this.hasBeenModified = true;
-						}
-						System.out.println(received.substring(6) + " is already online");
-						synchronized(onlineUsers) {
-						if(!onlineUsers.containsKey(received.substring(6))) {
+			} else
+				if(!userPseudo.equals(received.substring(6))) { //!(rcvPacket.getAddress()).equals("localhost")
+						if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne
+						 	synchronized(this.hasBeenModified) {
+								this.hasBeenModified = true;
+							}
+							System.out.println(received.substring(6) + " is online");
+							synchronized(onlineUsers) {
 							onlineUsers.put(received.substring(6),rcvPacket.getAddress());
+							}
+							message = new String("[011]_" + userPseudo); //Réponse à un utilisateur en ligne
+							sendBuf = message.getBytes();
+							myPacket = new DatagramPacket(sendBuf, sendBuf.length, broadcastAddress, 4444);
+							System.out.println("sending : " + message);
+							socket.send(myPacket);
 						}
+						if((received.substring(0,6)).equals("[011]_")) { //Déclaration utilisateur en ligne
+							synchronized(this.hasBeenModified) {
+								this.hasBeenModified = true;
+							}
+							System.out.println(received.substring(6) + " is already online");
+							synchronized(onlineUsers) {
+							if(!onlineUsers.containsKey(received.substring(6))) {
+								onlineUsers.put(received.substring(6),rcvPacket.getAddress());
+							}
+							}
 						}
-					}
-					if((received.substring(0,6)).equals("[002]_")) { //Déclaration déconnexion utilisateur
-						synchronized(this.hasBeenModified) {
+						if((received.substring(0,6)).equals("[002]_")) { //Déclaration déconnexion utilisateur
+							synchronized(this.hasBeenModified) {
+								this.hasBeenModified = true;
+							}
+							System.out.println(received.substring(6) + " is deconnected");
+							synchronized(onlineUsers) {			
+								onlineUsers.remove(received.substring(6));
+							}
+						}
+						if((received.substring(0,6)).equals("[021]_")) { //Déclaration changement de pseudo
 							this.hasBeenModified = true;
-						}
-						System.out.println(received.substring(6) + " is deconnected");
-						synchronized(onlineUsers) {			
-							onlineUsers.remove(received.substring(6));
-						}
-					}
-					if((received.substring(0,6)).equals("[021]_")) { //Déclaration changement de pseudo
-						this.hasBeenModified = true;
-						// Find corresponding old pseudo
-						try {
-							InetAddress hostAddr = rcvPacket.getAddress();
-							Set<String> usersOnTable = onlineUsers.keySet();
-							Iterator<String> it = usersOnTable.iterator();
-							String theUser = "shouldchange";
-							this.hasBeenModified = true;
-							while(it.hasNext()) {	
-									String aUser = it.next();
-									if((onlineUsers.get(aUser)) != null) {	
-										if((onlineUsers.get(aUser)).equals(hostAddr)) {	
-											theUser = aUser;
+							// Find corresponding old pseudo
+							try {
+								InetAddress hostAddr = rcvPacket.getAddress();
+								Set<String> usersOnTable = onlineUsers.keySet();
+								Iterator<String> it = usersOnTable.iterator();
+								String theUser = "shouldchange";
+								this.hasBeenModified = true;
+								while(it.hasNext()) {	
+										String aUser = it.next();
+										if((onlineUsers.get(aUser)) != null) {	
+											if((onlineUsers.get(aUser)).equals(hostAddr)) {	
+												theUser = aUser;
+											}
 										}
-									}
+								}
+								synchronized(onlineUsers) {									
+									System.out.println(theUser + "addr = " + (onlineUsers.get(theUser)).toString() );																		
+									onlineUsers.remove(theUser);
+									onlineUsers.put(received.substring(6),hostAddr);
+								}
+								System.out.println(received.substring(6) + " new pseudo");
 							}
-							synchronized(onlineUsers) {									
-								System.out.println(theUser + "addr = " + (onlineUsers.get(theUser)).toString() );																		
-								onlineUsers.remove(theUser);
-								onlineUsers.put(received.substring(6),hostAddr);
+							catch(Exception e) {
+								System.out.println("Error while updating a pseudo...");
+								e.printStackTrace();
 							}
-							System.out.println(received.substring(6) + " new pseudo");
-						}
-						catch(Exception e) {
-							System.out.println("Error while updating a pseudo...");
-							e.printStackTrace();
 						}
 					}
 				}
-				}
-			}
+			
 			}
 		}	
 		catch(Exception e) {
