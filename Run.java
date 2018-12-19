@@ -16,6 +16,7 @@ public class Run extends Frame
    private static JLabel lblError;
    private Dialog login;
    private TextField box;
+   private static PreConnectDiscovery discovery;
 
    class MyButtonValidateListener implements ActionListener
    {
@@ -25,8 +26,21 @@ public class Run extends Frame
 		if(wantedPseudo.equals("")) {
 			lblError.setText("Impossible to login in with an empty pseudo !");
 		} else {
-			new MainWindow(wantedPseudo);
-			r.dispose();
+			if(discovery.getOnlineUsers().contains(wantedPseudo)) {
+			lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
+			}
+			else {
+				try {
+					discovery.closeCommunications();
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+				finally {
+					new MainWindow(wantedPseudo);
+					r.dispose();
+				}
+			}
 		}
       }
    }
@@ -35,6 +49,12 @@ public class Run extends Frame
    {
       public void actionPerformed(ActionEvent e)
       {
+	 		try {
+				discovery.closeCommunications();
+			}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
          login.dispose();
          System.exit(0);
       }
@@ -43,6 +63,8 @@ public class Run extends Frame
    public Run()
    {
 			this.setTitle("Chat Room");
+			discovery = new PreConnectDiscovery();
+			(new Thread(discovery)).start();
 			box = new TextField();
             login = new Dialog(this);
 			lblError = new JLabel("");
