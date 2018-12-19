@@ -1,6 +1,9 @@
 package clavardage;
 
 import java.awt.*;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList ;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -40,6 +43,14 @@ public class HistoryDisplayWindow extends JFrame
 	
    }
 
+	WindowListener exitListener = new WindowAdapter() {
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+		      login.dispose();
+		}
+	};
+
 	public HistoryDisplayWindow(ArrayList<String> l)
 	{
 	   this.setTitle("List of stored histories");
@@ -71,6 +82,7 @@ public class HistoryDisplayWindow extends JFrame
 		login.add(sB);
 		login.add(exit);    
 		login.setVisible(true);
+		login.addWindowListener(exitListener);
 	}
 
 }

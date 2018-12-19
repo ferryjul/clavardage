@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 
 import java.awt.*;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -81,8 +84,20 @@ public class Conversation extends Frame {
 		return this.distantID;
 	 }
 
+	public void firstPlan() {
+		/*this.setAlwaysOnTop(true);
+		try {
+			Thread.sleep(10);
+		} catch(Exception ex) {
+
+		}
+		this.toFront();
+		this.setAlwaysOnTop(false);*/
+		this.setVisible(true);
+	}
+
 	public boolean isActive() {
-		return this.isActive;
+		return (this.isActive && convList.isActive());
 	 }
 
 
@@ -114,6 +129,36 @@ public class Conversation extends Frame {
       }
    }
 
+	WindowListener exitListener = new WindowAdapter() {
+
+		@Override
+		@SuppressWarnings( "deprecation" )
+		public void windowClosing(WindowEvent e) {
+		     try {
+			 // Fermeture de la découverte réseau
+			 convList.close();
+			 System.out.println("closed Listener");
+			 convWrit.close();
+			 System.out.println("closed Writer");
+			 treceiv.stop();
+			 Tsend.stop();
+			 System.out.println("closed Stopped Listener and Writer threads");
+			 distantSocket.close();
+			 System.out.println("closed socket");
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			// Fermeture de l'historique
+			currentHistory.closeHistory();
+			System.out.println("Closed History");
+			 // Fermeture de la fenêtre
+		    login.dispose();
+			System.out.println("closed GUI");
+      
+		}
+	};
+
 	public Conversation(Socket dSocket, History hist, String s) {
 		// partie affichage
 		isActive = true;
@@ -135,6 +180,7 @@ public class Conversation extends Frame {
 		login.add(exit);	
 		login.add(tA);
 		login.setVisible(true);
+		login.addWindowListener(exitListener);
 
 		this.distantSocket = dSocket;
 

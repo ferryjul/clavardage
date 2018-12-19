@@ -7,6 +7,9 @@ import java.util.ArrayList ;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -23,6 +26,13 @@ public class AnHistWindow extends Frame
       }
    }
 
+	WindowListener exitListener = new WindowAdapter() {
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+		     login.dispose();
+		}
+	};
 
 	public AnHistWindow(ArrayList<String> l)
 	{
@@ -46,6 +56,7 @@ public class AnHistWindow extends Frame
 		}
 		login.add(exit);    
 		login.setVisible(true);
+		login.addWindowListener(exitListener);
 	}
 
 }

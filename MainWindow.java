@@ -1,6 +1,9 @@
 package clavardage;
 
 import java.awt.*;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.Thread;
@@ -53,7 +56,6 @@ public class MainWindow extends Frame {
 			   aP.updateUI();
          }
       }
-
    }
 
    private static JLabel lblInput;
@@ -103,7 +105,8 @@ public class MainWindow extends Frame {
             InetAddress hostAddress = networkDiscovery.getAddress(distantUser);
             System.out.println("Beginning communication with " + distantUser
                   + " at @" + hostAddress);
-            CM.createConversation(hostAddress, 8042);
+            int code = CM.createConversation(hostAddress, 8042);
+			if(code == 1) { lblPseudoError.setText("Conversation déjà créée"); }
          }
       }
    }
@@ -148,9 +151,27 @@ public class MainWindow extends Frame {
       }
    }
 
+	WindowListener exitListener = new WindowAdapter() {
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+          // Fermeture de la découverte réseau
+         synchronized (networkDiscovery) {
+            networkDiscovery.notifyOffline();
+            networkDiscovery.closeCommunications();
+         }
+         /*
+          * synchronized(CM) { CM.closeCM(); }
+          */
+         login.dispose();
+         System.exit(0);
+    }
+};
+
    public MainWindow(String userName) {
       // Création de la fenêtre graphique
-      this.setTitle("Chat Room");
+	  super("Chat Room");
+      //this.setTitle("Chat Room");
       currentUserName = userName;
       login = new Dialog(this);
       lblInput = new JLabel(
@@ -183,6 +204,7 @@ public class MainWindow extends Frame {
       login.add(lblPseudoError);
       login.add(displayHist);
       login.setVisible(true);
+	  login.addWindowListener(exitListener);
 
       // Lancement de la découverte Réseau
       networkDiscovery = new OnlineUsersManager(userName);

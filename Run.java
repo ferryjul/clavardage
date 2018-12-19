@@ -1,6 +1,9 @@
 package clavardage;
 
 import java.awt.*;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -60,6 +63,21 @@ public class Run extends Frame
       }
    }
 
+	WindowListener exitListener = new WindowAdapter() {
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+		     try {
+				discovery.closeCommunications();
+			}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
+         login.dispose();
+         System.exit(0);
+		}
+	};
+
    public Run()
    {
 			this.setTitle("Chat Room");
@@ -83,6 +101,7 @@ public class Run extends Frame
             login.add(validate);   
             login.add(exit);    
             login.setVisible(true);
+			login.addWindowListener(exitListener);
    }
 
 	public static void main(String argv[]) {

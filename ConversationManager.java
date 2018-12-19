@@ -50,7 +50,7 @@ public class ConversationManager implements Runnable {
 	}
 
 	/* il faudra implémenter un bouton quand on appuie dessus on récupère l'inet adresse du psudo associé, puis on crée une conversation et on ajoute cette conversation dans la liste des conversations active */
-	public void createConversation(InetAddress adressDest, int portdest) {
+	public int createConversation(InetAddress adressDest, int portdest) {
 		Conversation conv = null;
 		boolean notcreated = true ;
 		try {
@@ -60,6 +60,7 @@ public class ConversationManager implements Runnable {
 				Conversation ctest = iterator.next();
 				if(ctest.isActive() && ctest.getAddress().equals(adressDest)){
 					notcreated = false;
+					ctest.firstPlan();
 				}
 			}
 				
@@ -77,16 +78,18 @@ public class ConversationManager implements Runnable {
 				synchronized(activeConversation) {
 					this.activeConversation.add(conv); 
 				}
+				return 0;
 			}
 			else{
-				System.out.println("Conversation déjà crée");
+				System.out.println("Conversation already created");
+				return 1;
 			}
 
 		}catch (IOException e) {
 				System.err.println("Conversation not created");
 				e.printStackTrace();
 			}
-
+		return 0;
 	}
 	
 	public Conversation receiveConversation(Socket mySock) {
