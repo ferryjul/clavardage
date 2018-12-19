@@ -179,6 +179,7 @@ public class OnlineUsersManager implements Runnable {
 			socket.receive(rcvPacket);
 			String received = new String(rcvPacket.getData(), 0, rcvPacket.getLength());
 			System.out.println("received :" + received);
+			if(received.length()>5) {
 			if(!userPseudo.equals(received.substring(6))) { //!(rcvPacket.getAddress()).equals("localhost")
 				if((received.substring(0,5)).equals("[000]")) { //Demande des pseudos en ligne
 					message = new String("[011]_" + userPseudo); //Réponse à un utilisateur en ligne
@@ -250,6 +251,7 @@ public class OnlineUsersManager implements Runnable {
 							e.printStackTrace();
 						}
 					}
+				}
 				}
 			}
 			}

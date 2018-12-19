@@ -44,7 +44,7 @@ public class MainWindow extends Frame {
                synchronized (usersSet) {
                   while (it.hasNext()) {
                      String aUser = it.next();
-                     System.out.println("test " + aUser);
+                     //System.out.println("test " + aUser);
                      JLabel jll = new JLabel(aUser);
                      aP.add(jll);
                   }
