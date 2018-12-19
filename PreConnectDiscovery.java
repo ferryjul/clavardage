@@ -73,7 +73,7 @@ public class PreConnectDiscovery implements Runnable {
 			while(this.isActiveManager) {
 			socket.receive(rcvPacket);
 			String received = new String(rcvPacket.getData(), 0, rcvPacket.getLength());
-			System.out.println("received :" + received);
+			System.out.println("[PND] received :" + received);
 //!(rcvPacket.getAddress()).equals("localhost")
 				if(!(received.equals("[000]"))) {
 					if((received.substring(0,6)).equals("[001]_")) { //Déclaration utilisateur en ligne*
@@ -126,6 +126,9 @@ public class PreConnectDiscovery implements Runnable {
 				}
 			}
 		}	
+		catch(java.net.SocketException exe) {
+			//NOTHING, GREAT
+		}
 		catch(Exception e) {
 			System.out.println("Error while sending UDP packet");
 			e.printStackTrace();

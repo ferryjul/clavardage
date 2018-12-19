@@ -50,6 +50,7 @@ public class Conversation extends Frame {
 			System.out.println("Closed History");
 			 // Fermeture de la fenêtre
 		    login.dispose();
+			this.dispose();
 			System.out.println("closed GUI");		
 	}
 

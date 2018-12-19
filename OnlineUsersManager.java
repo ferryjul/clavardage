@@ -256,6 +256,9 @@ public class OnlineUsersManager implements Runnable {
 			
 			}
 		}	
+		catch(java.net.SocketException exe) {
+			//NOTHING, GREAT
+		}
 		catch(Exception e) {
 			System.out.println("Error while sending UDP packet");
 			e.printStackTrace();
