@@ -12,6 +12,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 
 public class Conversation extends Frame {
 	// Composants Réseau
@@ -23,7 +30,7 @@ public class Conversation extends Frame {
 	private boolean isActive;
 
 	// Composants Graphiques
-	private TextField txtSEND;	
+	private JTextField txtSEND;	
 	private Dialog login;
 	private JLabel lblRCV;
 	private Thread Tsend;
@@ -96,6 +103,18 @@ public class Conversation extends Frame {
 		this.setVisible(true);
 	}
 
+	private Action sendAction = new AbstractAction("sendAction")
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            if(convList.isActive()) {
+			String toBeSent = txtSEND.getText();
+			txtSEND.setText("");
+			convWrit.send(toBeSent);
+		}
+        }
+    };
+
 	public boolean isActive() {
 		return (this.isActive && convList.isActive());
 	 }
@@ -166,11 +185,26 @@ public class Conversation extends Frame {
 		this.currentHistory = hist;
 		login = new Dialog(this);
         lblRCV = new JLabel("Conversation with " + distantID);
-		txtSEND = new TextField();  
-		Button sendButton = new Button("Send Message");      
-		sendButton.addActionListener(new MyButtonSend());
-		Button exit = new Button("Quit");
+		txtSEND = new JTextField();  
+		txtSEND.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+		            if(convList.isActive()) {
+					String toBeSent = txtSEND.getText();
+					txtSEND.setText("");
+					convWrit.send(toBeSent);
+			  		}
+		        }
+		    }
+    	});
+		JButton sendButton = new JButton("Send Message");      
+		//sendButton.addActionListener(new MyButtonSend());
+		JButton exit = new JButton("Quit");
 		exit.addActionListener(new MyButtonExitListener());
+		sendButton.setAction(sendAction);
+		sendButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "SEND");
+        sendButton.getActionMap().put("SEND", sendAction);
 		TextArea tA = new TextArea();
 		login.setLayout(new GridLayout(0, 1));
 		login.setSize(850, 400);
@@ -181,7 +215,7 @@ public class Conversation extends Frame {
 		login.add(tA);
 		login.setVisible(true);
 		login.addWindowListener(exitListener);
-
+		
 		this.distantSocket = dSocket;
 
 		// Create Sender and Receiver threads		

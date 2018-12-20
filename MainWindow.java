@@ -1,10 +1,13 @@
 package clavardage;
 
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.lang.Thread;
 import java.util.Set;
@@ -43,12 +46,14 @@ public class MainWindow extends Frame {
                aP.removeAll();
                Iterator<String> it = usersSet.iterator();
                JLabel jl = new JLabel("-------- Currently Online Users : --------");
+			   jl.setHorizontalAlignment(JLabel.CENTER);
                aP.add(jl);
                synchronized (usersSet) {
                   while (it.hasNext()) {
                      String aUser = it.next();
                      //System.out.println("test " + aUser);
                      JLabel jll = new JLabel(aUser);
+					 jll.setHorizontalAlignment(JLabel.CENTER);
                      aP.add(jll);
                   }
                }
@@ -70,7 +75,6 @@ public class MainWindow extends Frame {
    private static HistoryManager HM;
 
    class DisplayHistory implements Runnable {
-
       public void setList(ArrayList<String> l) {
          HistoryDisplayWindow w = new HistoryDisplayWindow(l);
       }
@@ -186,6 +190,57 @@ public class MainWindow extends Frame {
       JButton chat = new JButton("Send a message to :");
       openConvWith = new TextField();
       txtNewPseudo = new TextField();
+	  openConvWith.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+		              String distantUser = openConvWith.getText();
+         openConvWith.setText("");
+         if (distantUser.equals("")) {
+            lblPseudoError.setText("Error : Empty field");
+         } else if (distantUser.equals(currentUserName)) {
+            lblPseudoError
+                  .setText("Error : " + distantUser + " is your own pseudo");
+         } else if (!networkDiscovery.isOnline(distantUser)) {
+            lblPseudoError.setText("Error : " + distantUser + " is not online");
+         } else {
+            InetAddress hostAddress = networkDiscovery.getAddress(distantUser);
+            System.out.println("Beginning communication with " + distantUser
+                  + " at @" + hostAddress);
+            int code = CM.createConversation(hostAddress, 8042);
+			if(code == 1) { lblPseudoError.setText("Conversation déjà créée"); }
+         }
+		        }
+		    }
+      });
+	  txtNewPseudo.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyPressed(KeyEvent e) {
+		            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+						 if (!txtNewPseudo.getText().equals("")) {
+            String newPse = txtNewPseudo.getText();
+            int returnCode = networkDiscovery.notifyNewPseudo(newPse);
+            txtNewPseudo.setText("");
+            if (returnCode == -1) {
+               lblPseudoError
+                     .setText("Error : this pseudo is already used by a user");
+            } else if (returnCode == -2) {
+               lblPseudoError.setText("Error : this is already your pseudo");
+            } else if (returnCode == 0) {
+               lblPseudoError.setText("Pseudo change OK");
+               currentUserName = newPse;
+               lblInput.setText("Welcome " + currentUserName
+                     + " in myChatroom. You can now start messaging online users");
+            } else {
+               lblPseudoError.setText("Error : unexpected return Code");
+            }
+         } else {
+            lblPseudoError.setText("Error : empty text field");
+         }
+					}
+		       
+		    }
+      });
       JButton changePseudo = new JButton("Set new pseudo :");
       changePseudo.addActionListener(new MyButtonChangePseudo());
       chat.addActionListener(new MyButtonChatListener());

@@ -7,7 +7,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
@@ -20,11 +21,15 @@ public class Run extends Frame
    private Dialog login;
    private TextField box;
    private static PreConnectDiscovery discovery;
+   private static JRadioButton modeSelectionUDP;
+   private static JRadioButton modeSelectionHTTP;
+
 
    class MyButtonValidateListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
       {
+	    if(modeSelectionUDP.isSelected()) {
 		String wantedPseudo = box.getText();
 		if(wantedPseudo.equals("")) {
 			lblError.setText("Impossible to login in with an empty pseudo !");
@@ -45,6 +50,9 @@ public class Run extends Frame
 				}
 			}
 		}
+		} else {
+			lblError.setText("Not implemented yet.");
+	    }
       }
    }
 
@@ -81,7 +89,18 @@ public class Run extends Frame
    public Run()
    {
 			this.setTitle("Chat Room");
+			
 			discovery = new PreConnectDiscovery();
+			modeSelectionUDP = new JRadioButton("Local Mode (UDP-Based)");
+			modeSelectionHTTP = new JRadioButton("Distant Mode (HTTP-Based)");
+			ButtonGroup group = new ButtonGroup();
+            group.add(modeSelectionUDP);
+			group.add(modeSelectionHTTP);
+			//modeSelectionHTTP.setEnabled(false);
+			modeSelectionUDP.setEnabled(true);
+			modeSelectionUDP.setSelected(true);
+    		//modeSelectionUDP.setMnemonic(KeyEvent.VK_R);
+   			//modeSelectionUDP.setActionCommand(rabbitString);
 			(new Thread(discovery)).start();
 			box = new TextField();
             login = new Dialog(this);
@@ -93,12 +112,14 @@ public class Run extends Frame
             JButton validate = new JButton("Validate Pseudo");        
             validate.addActionListener(new MyButtonValidateListener());
             JButton exit = new JButton("Quit");
-            exit.addActionListener(new MyButtonExitListener());
-            login.setSize(850, 200);
+            exit.addActionListener(new MyButtonExitListener());		   
+            login.setSize(850, 300);
             login.add(lblInfo);   
 			login.add(lblError);
 			login.add(box);
-            login.add(validate);   
+            login.add(validate);
+			login.add(modeSelectionUDP);   
+			login.add(modeSelectionHTTP);   
             login.add(exit);    
             login.setVisible(true);
 			login.addWindowListener(exitListener);
