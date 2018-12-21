@@ -23,7 +23,10 @@ public class Run extends Frame
    private static PreConnectDiscovery discovery;
    private static JRadioButton modeSelectionUDP;
    private static JRadioButton modeSelectionHTTP;
-
+   private static JLabel lblServerAddressHTTP;
+   private static JLabel lblServerPortHTTP;
+   private static TextField serverAddressHTTP;
+   private static TextField serverPortHTTP;
 
    class MyButtonValidateListener implements ActionListener
    {
@@ -56,6 +59,30 @@ public class Run extends Frame
       }
    }
 
+	public class httpListener implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+	 		//lblError.setText("HTTP Mode selected");
+			lblServerAddressHTTP.setEnabled(true);
+			lblServerPortHTTP.setEnabled(true);
+			serverAddressHTTP.setEnabled(true);
+			serverPortHTTP.setEnabled(true);
+      }
+   }
+
+	public class udpListener implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+	 		//lblError.setText("UDP Mode selected");
+			lblServerAddressHTTP.setEnabled(false);
+			lblServerPortHTTP.setEnabled(false);
+			serverAddressHTTP.setEnabled(false);
+			serverPortHTTP.setEnabled(false);
+      }
+   }
+	
    public class MyButtonExitListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)
@@ -88,11 +115,21 @@ public class Run extends Frame
 
    public Run()
    {
-			this.setTitle("Chat Room");
-			
+			this.setTitle("Chat Room");		
 			discovery = new PreConnectDiscovery();
+					
+			lblServerAddressHTTP = new JLabel("Enter HTTP presence Server Address :");
+			serverAddressHTTP = new TextField();
+			lblServerPortHTTP = new JLabel("Enter HTTP presence Server Port :");
+			serverPortHTTP = new TextField();
+			lblServerAddressHTTP.setEnabled(false);
+			lblServerPortHTTP.setEnabled(false);
+			serverAddressHTTP.setEnabled(false);
+			serverPortHTTP.setEnabled(false);
 			modeSelectionUDP = new JRadioButton("Local Mode (UDP-Based)");
 			modeSelectionHTTP = new JRadioButton("Distant Mode (HTTP-Based)");
+			modeSelectionHTTP.addActionListener(new httpListener());
+			modeSelectionUDP.addActionListener(new udpListener());
 			ButtonGroup group = new ButtonGroup();
             group.add(modeSelectionUDP);
 			group.add(modeSelectionHTTP);
@@ -119,7 +156,11 @@ public class Run extends Frame
 			login.add(box);
             login.add(validate);
 			login.add(modeSelectionUDP);   
-			login.add(modeSelectionHTTP);   
+			login.add(modeSelectionHTTP);  
+			login.add(lblServerAddressHTTP);
+			login.add(serverAddressHTTP);
+			login.add(lblServerPortHTTP);
+			login.add(serverPortHTTP);
             login.add(exit);    
             login.setVisible(true);
 			login.addWindowListener(exitListener);
