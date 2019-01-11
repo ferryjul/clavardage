@@ -48,7 +48,7 @@ public class Run extends Frame
 					ex.printStackTrace();
 				}
 				finally {
-					new MainWindow(wantedPseudo,true); //true means UDP-Based network discovery
+					new MainWindow(wantedPseudo,true,null,null); //true means UDP-Based network discovery
 					r.dispose();
 				}
 			}
@@ -70,7 +70,7 @@ public class Run extends Frame
 						ex.printStackTrace();
 					}
 					finally {
-						new MainWindow(wantedPseudo,false); //false means HTTP presence server based network discovery
+						new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText()); //false means HTTP presence server based network discovery
 						r.dispose();
 					}
 				}

@@ -74,6 +74,8 @@ public class MainWindow extends Frame {
    private static ConversationManager CM;
    private static HistoryManager HM;
    private static boolean udpBased;
+   private String sAddress;
+   private String sPort;
 
    class DisplayHistory implements Runnable {
       public void setList(ArrayList<String> l) {
@@ -173,11 +175,13 @@ public class MainWindow extends Frame {
     }
 };
 
-   public MainWindow(String userName, boolean isUDPBased) {
+   public MainWindow(String userName, boolean isUDPBased, String serverAddress, String serverPort) {
       // Création de la fenêtre graphique
 	  super("Chat Room");
       //this.setTitle("Chat Room");
       udpBased = isUDPBased;
+      sAddress = serverAddress;
+      sPort = serverPort;
       currentUserName = userName;
       login = new Dialog(this);
       lblInput = new JLabel(
@@ -271,7 +275,7 @@ public class MainWindow extends Frame {
 
       // Lancement de la découverte Réseau
       // On passe au OnlineUsersManager l'information sur le fonctionnement en UDP ou via un serveur de présence HTTP
-      networkDiscovery = new OnlineUsersManager(userName, udpBased);
+      networkDiscovery = new OnlineUsersManager(userName, udpBased, sAddress, sPort);
       Thread networkDiscoveryThread = new Thread(networkDiscovery);
       networkDiscoveryThread.start();
 
