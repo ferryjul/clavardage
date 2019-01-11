@@ -38,7 +38,7 @@ public class Run extends Frame
 			lblError.setText("Impossible to login in with an empty pseudo !");
 		} else {
 			if(discovery.getOnlineUsers().contains(wantedPseudo)) {
-			lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
+				lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
 			}
 			else {
 				try {
@@ -48,19 +48,40 @@ public class Run extends Frame
 					ex.printStackTrace();
 				}
 				finally {
-					new MainWindow(wantedPseudo);
+					new MainWindow(wantedPseudo,true); //true means UDP-Based network discovery
 					r.dispose();
 				}
 			}
 		}
 		} else {
-			lblError.setText("Not implemented yet.");
+			lblError.setText("Careful : beta version");	
+			String wantedPseudo = box.getText();
+			if(wantedPseudo.equals("")) {
+				lblError.setText("Impossible to login in with an empty pseudo !");
+			} else {
+				if(discovery.getOnlineUsers().contains(wantedPseudo)) {
+					lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
+				}
+				else {
+					try {
+						discovery.closeCommunications();
+					}
+					catch(Exception ex){
+						ex.printStackTrace();
+					}
+					finally {
+						new MainWindow(wantedPseudo,false); //false means HTTP presence server based network discovery
+						r.dispose();
+					}
+				}
+			}
 	    }
       }
    }
 
 	public class httpListener implements ActionListener
    {
+      private boolean firstSel = true;
       public void actionPerformed(ActionEvent e)
       {
 	 		//lblError.setText("HTTP Mode selected");
@@ -68,6 +89,11 @@ public class Run extends Frame
 			lblServerPortHTTP.setEnabled(true);
 			serverAddressHTTP.setEnabled(true);
 			serverPortHTTP.setEnabled(true);
+			if(this.firstSel == true){
+				this.firstSel = false;
+				serverAddressHTTP.setText("localhost");
+				serverPortHTTP.setText("8080");	
+			}	
       }
    }
 
@@ -115,9 +141,8 @@ public class Run extends Frame
 
    public Run()
    {
-			this.setTitle("Chat Room");		
-			discovery = new PreConnectDiscovery();
-					
+			this.setTitle("Chat Room");	
+			discovery = new PreConnectDiscovery();					
 			lblServerAddressHTTP = new JLabel("Enter HTTP presence Server Address :");
 			serverAddressHTTP = new TextField();
 			lblServerPortHTTP = new JLabel("Enter HTTP presence Server Port :");
@@ -125,7 +150,7 @@ public class Run extends Frame
 			lblServerAddressHTTP.setEnabled(false);
 			lblServerPortHTTP.setEnabled(false);
 			serverAddressHTTP.setEnabled(false);
-			serverPortHTTP.setEnabled(false);
+			serverPortHTTP.setEnabled(false);		
 			modeSelectionUDP = new JRadioButton("Local Mode (UDP-Based)");
 			modeSelectionHTTP = new JRadioButton("Distant Mode (HTTP-Based)");
 			modeSelectionHTTP.addActionListener(new httpListener());
@@ -135,8 +160,9 @@ public class Run extends Frame
 			group.add(modeSelectionHTTP);
 			//modeSelectionHTTP.setEnabled(false);
 			modeSelectionUDP.setEnabled(true);
+			modeSelectionHTTP.setEnabled(true);
 			modeSelectionUDP.setSelected(true);
-    		//modeSelectionUDP.setMnemonic(KeyEvent.VK_R);
+    			//modeSelectionUDP.setMnemonic(KeyEvent.VK_R);
    			//modeSelectionUDP.setActionCommand(rabbitString);
 			(new Thread(discovery)).start();
 			box = new TextField();

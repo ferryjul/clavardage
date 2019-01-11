@@ -29,6 +29,7 @@ public class OnlineUsersManager implements Runnable {
 	byte[] rcvBuf = new byte[256];
 	private boolean isActiveManager = false;
 	private Boolean hasBeenModified = true;
+	private boolean udpBased;
 	String message;
 
 	public int notifyOnline() {	
@@ -153,8 +154,9 @@ public class OnlineUsersManager implements Runnable {
 	}
 
 
-	public OnlineUsersManager(String ps) {
+	public OnlineUsersManager(String ps, boolean isUDPBased) {
 		try {
+			this.udpBased = isUDPBased;
 			this.isActiveManager = true;
 			userPseudo = ps;
 			onlineUsers.put(userPseudo, null);

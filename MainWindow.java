@@ -73,6 +73,7 @@ public class MainWindow extends Frame {
    private static TextField openConvWith;
    private static ConversationManager CM;
    private static HistoryManager HM;
+   private static boolean udpBased;
 
    class DisplayHistory implements Runnable {
       public void setList(ArrayList<String> l) {
@@ -172,10 +173,11 @@ public class MainWindow extends Frame {
     }
 };
 
-   public MainWindow(String userName) {
+   public MainWindow(String userName, boolean isUDPBased) {
       // Création de la fenêtre graphique
 	  super("Chat Room");
       //this.setTitle("Chat Room");
+      udpBased = isUDPBased;
       currentUserName = userName;
       login = new Dialog(this);
       lblInput = new JLabel(
@@ -248,7 +250,7 @@ public class MainWindow extends Frame {
       exit.addActionListener(new MyButtonExitListener());
       JButton displayHist = new JButton("Display all available histories");
       displayHist.addActionListener(new MyButtonHistListener());
-      login.setSize(850, 500);
+      login.setSize(850, 550);
       login.add(lblInput);
       login.add(sB);
       login.add(chat);
@@ -258,11 +260,18 @@ public class MainWindow extends Frame {
       login.add(txtNewPseudo);
       login.add(lblPseudoError);
       login.add(displayHist);
+      if(udpBased) {
+	login.add(new JLabel("UDP-Based network discovery mode"));
+      }
+      else {
+	login.add(new JLabel("presence Server discovery mode"));
+      }
       login.setVisible(true);
 	  login.addWindowListener(exitListener);
 
       // Lancement de la découverte Réseau
-      networkDiscovery = new OnlineUsersManager(userName);
+      // On passe au OnlineUsersManager l'information sur le fonctionnement en UDP ou via un serveur de présence HTTP
+      networkDiscovery = new OnlineUsersManager(userName, udpBased);
       Thread networkDiscoveryThread = new Thread(networkDiscovery);
       networkDiscoveryThread.start();
 
