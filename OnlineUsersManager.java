@@ -201,35 +201,37 @@ public class OnlineUsersManager implements Runnable {
 	      synchronized(this.hasBeenModified) {
 			this.hasBeenModified = false;
 		   }*/
-		try {
-			String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=info&pseudo=" + userPseudo;		
-			System.out.println("Trying to connect to \"" + address + "\"");
-			URL url = new URL(address);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			int responseCode = con.getResponseCode();
-			if(responseCode == 200) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				System.out.println("Response code from server = " + responseCode);
-				String respo = in.readLine();
-				System.out.println("Response message from server = " + respo);
-				in.close();
-				con.disconnect();
-				HashMap<String,InetAddress> updatedOnlineUsers = new HashMap<String,InetAddress>();
-				String resp = respo.substring(13); // To remove the header "SERVER_REPLY:" at the beginning of the message.
-				String[] usersArray = resp.split(";;");
-				for(int i = 0 ; i < usersArray.length ; i++) {
-					String[] aUser = usersArray[i].split("@");
-					updatedOnlineUsers.put(aUser[0], InetAddress.getByName(aUser[1]));		
+		if(!udpBased) {
+			try {
+				String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=info&pseudo=" + userPseudo;		
+				System.out.println("Trying to connect to \"" + address + "\"");
+				URL url = new URL(address);
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					System.out.println("Response code from server = " + responseCode);
+					String respo = in.readLine();
+					System.out.println("Response message from server = " + respo);
+					in.close();
+					con.disconnect();
+					HashMap<String,InetAddress> updatedOnlineUsers = new HashMap<String,InetAddress>();
+					String resp = respo.substring(13); // To remove the header "SERVER_REPLY:" at the beginning of the message.
+					String[] usersArray = resp.split(";;");
+					for(int i = 0 ; i < usersArray.length ; i++) {
+						String[] aUser = usersArray[i].split("@");
+						updatedOnlineUsers.put(aUser[0], InetAddress.getByName(aUser[1]));		
+					}
+					onlineUsers = updatedOnlineUsers;
 				}
-				onlineUsers = updatedOnlineUsers;
+				else {
+					System.out.println("Fatal error while connecting to server");
+					System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
+				}
+			} catch(Exception e) {
+				System.out.println("Communication error with HTTP presence server :");
+				e.printStackTrace();
 			}
-			else {
-				System.out.println("Fatal error while connecting to server");
-				System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
-			}
-		} catch(Exception e) {
-			System.out.println("Communication error with HTTP presence server :");
-			e.printStackTrace();
 		}
    		synchronized(onlineUsers) {
 			Set<String> s = new HashSet<String>(onlineUsers.keySet());
