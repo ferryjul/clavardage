@@ -1,13 +1,17 @@
 package clavardage;
 import java.net.DatagramSocket ;
 import java.util.ArrayList; 
-import java.util.HashMap; 
+import java.util.HashMap;
+import java.util.Map;
 import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.lang.String;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.*;
 /*
 Conventions (types de messages)
 -> Demande des pseudos en ligne : [000]
@@ -42,6 +46,22 @@ public class OnlineUsersManager implements Runnable {
 			}
 			else {
 				//TODO
+				String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=connect&pseudo=" + userPseudo;			
+				System.out.println("Trying to connect to \"" + address + "\"");
+				URL url = new URL(address);
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					System.out.println("Response code from server = " + responseCode);
+					System.out.println("Response message from server = " + in.readLine());
+					in.close();
+					con.disconnect();
+				}
+				else {
+					System.out.println("Fatal error while connecting to server");
+					System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
+				}
 			}
 			this.hasBeenModified = true;
 		}
@@ -67,7 +87,29 @@ public class OnlineUsersManager implements Runnable {
 			}
 		} 
 		else {
-			//TODO
+			try {
+				String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=deconnect&pseudo=" + userPseudo;			
+				System.out.println("Trying to connect to \"" + address + "\"");
+				URL url = new URL(address);
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					System.out.println("Response code from server = " + responseCode);
+					System.out.println("Response message from server = " + in.readLine());
+					in.close();
+					con.disconnect();
+					return 0;
+				}
+				else {
+					System.out.println("Fatal error while connecting to server");
+					System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
+					return 1;
+				}
+			} catch(Exception e) {
+				System.out.println("Communication error with HTTP presence server :");
+				e.printStackTrace();
+			}
 			return 0;
 		}		
 	}
@@ -115,7 +157,29 @@ public class OnlineUsersManager implements Runnable {
 			}
 		}
 		else {
-			//TODO
+			try {
+				String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=change&pseudo=" + userPseudo;			
+				System.out.println("Trying to connect to \"" + address + "\"");
+				URL url = new URL(address);
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					System.out.println("Response code from server = " + responseCode);
+					System.out.println("Response message from server = " + in.readLine());
+					in.close();
+					con.disconnect();
+					return 0;
+				}
+				else {
+					System.out.println("Fatal error while connecting to server");
+					System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
+					return 1;
+				}
+			} catch(Exception e) {
+				System.out.println("Communication error with HTTP presence server :");
+				e.printStackTrace();
+			}
 		}
 		return 0;
 	}
@@ -132,11 +196,41 @@ public class OnlineUsersManager implements Runnable {
 		}
 	}
 
-	public Set<String> getOnlineUsers() {
+	public Set<String> getOnlineUsers() { /* in HTTP mode, call to this function causes update of the hashmap of the users */
 	   /* if(hasBeenModified == true) {
 	      synchronized(this.hasBeenModified) {
 			this.hasBeenModified = false;
 		   }*/
+		try {
+			String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=info&pseudo=" + userPseudo;		
+			System.out.println("Trying to connect to \"" + address + "\"");
+			URL url = new URL(address);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			int responseCode = con.getResponseCode();
+			if(responseCode == 200) {
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				System.out.println("Response code from server = " + responseCode);
+				String respo = in.readLine();
+				System.out.println("Response message from server = " + respo);
+				in.close();
+				con.disconnect();
+				HashMap<String,InetAddress> updatedOnlineUsers = new HashMap<String,InetAddress>();
+				String resp = respo.substring(13); // To remove the header "SERVER_REPLY:" at the beginning of the message.
+				String[] usersArray = resp.split(";;");
+				for(int i = 0 ; i < usersArray.length ; i++) {
+					String[] aUser = usersArray[i].split("@");
+					updatedOnlineUsers.put(aUser[0], InetAddress.getByName(aUser[1]));		
+				}
+				onlineUsers = updatedOnlineUsers;
+			}
+			else {
+				System.out.println("Fatal error while connecting to server");
+				System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
+			}
+		} catch(Exception e) {
+			System.out.println("Communication error with HTTP presence server :");
+			e.printStackTrace();
+		}
    		synchronized(onlineUsers) {
 			Set<String> s = new HashSet<String>(onlineUsers.keySet());
    			return s;
@@ -152,6 +246,10 @@ public class OnlineUsersManager implements Runnable {
 		if(udpBased) {
 			socket.close();
 			System.out.println("Datagram socket successfully closed");
+		}
+		else {
+			//TODO
+			System.out.println("Closing Online Users Manager");
 		}
 	}	
 	
@@ -173,6 +271,31 @@ public class OnlineUsersManager implements Runnable {
 		}
 	}
 
+	/* GENERIC PARAMETERS BUILDER ADAPTED FROM THE INTERNET */
+	public static String getParamsString(Map<String, String> params) {
+		String resultString = null;
+		try {
+		StringBuilder result = new StringBuilder();
+	 
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+		  result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+		  result.append("=\"");
+		  result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+		  result.append("\"");
+		  result.append("&");
+		}
+	 
+		resultString = result.toString();
+		
+		}
+		catch(Exception e) {
+			System.out.println("Error while building HTTP request parameters :");
+			e.printStackTrace();
+		}
+		return resultString.length() > 0
+		  ? resultString.substring(0, resultString.length() - 1)
+		  : resultString;
+	    }
 
 	public OnlineUsersManager(String ps, boolean isUDPBased, String serverAddress, String serverPort) {
 		try {
@@ -195,15 +318,13 @@ public class OnlineUsersManager implements Runnable {
 			else {
 				//TODO
 				System.out.println("Network Discovery Launching for Server @" + sAddress + ":" + sPort);
-				/*URL url = new URL("http://example.com");
-				HttpURLConnection con = (HttpURLConnection) url.openConnection();
-				con.setRequestMethod("GET");*/
 			}
 			this.notifyOnline();
 			
 		}
 		catch(Exception e) {
-			System.out.println("Error while initializing components");
+			System.out.println("Error while initializing components :");
+			e.printStackTrace();
 		}
 	}
 

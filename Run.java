@@ -11,6 +11,9 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.*;
 
 @SuppressWarnings("serial")
 public class Run extends Frame
@@ -54,25 +57,52 @@ public class Run extends Frame
 			}
 		}
 		} else {
-			lblError.setText("Careful : beta version");	
+			//lblError.setText("Careful : beta version");	
 			String wantedPseudo = box.getText();
 			if(wantedPseudo.equals("")) {
 				lblError.setText("Impossible to login in with an empty pseudo !");
 			} else {
-				if(discovery.getOnlineUsers().contains(wantedPseudo)) {
-					lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
-				}
-				else {
-					try {
-						discovery.closeCommunications();
+				try {
+					String address = "http://" + serverAddressHTTP.getText() + ":" + serverPortHTTP.getText() + "/presenceserver/connect?display=false&type=isfree&pseudo=" + wantedPseudo;			
+					System.out.println("Trying to connect to \"" + address + "\"");
+					URL url = new URL(address);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection();
+					int responseCode = con.getResponseCode();
+					if(responseCode == 200) {
+						BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+						System.out.println("Response code from server = " + responseCode);
+						String resp = in.readLine();
+						System.out.println("Response message from server = " + resp);
+						in.close();
+						con.disconnect();
+						if(resp.equals("SERVER_REPLY:YES")) {
+							try {
+								discovery.closeCommunications();
+							}
+							catch(Exception ex){
+								ex.printStackTrace();
+							}
+							finally {
+								new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText()); //false means HTTP presence server based network discovery
+								r.dispose();
+							}
+						}
+						else if(resp.equals("SERVER_REPLY:NO")) {
+							lblError.setText("Impossible to login ; " + wantedPseudo + " is already Online.");
+						}
+						else {
+							lblError.setText("Received unknown response from server");
+						}
 					}
-					catch(Exception ex){
-						ex.printStackTrace();
+					else {
+						lblError.setText("Can not connect to server");
+						System.out.println("Fatal error while connecting to server");
+						System.out.println("RESTART APPLICATION or RESTART PERFORMING TASK");
 					}
-					finally {
-						new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText()); //false means HTTP presence server based network discovery
-						r.dispose();
-					}
+				} catch(Exception ex) {
+					lblError.setText("Communication error : You might have misspelled server name or port");
+					System.out.println("Communication error with HTTP presence server :");
+					//ex.printStackTrace();
 				}
 			}
 	    }

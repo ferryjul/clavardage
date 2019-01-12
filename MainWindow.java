@@ -293,12 +293,17 @@ public class MainWindow extends Frame {
 
       // Lancement du thread de màj des pseudos
 	   Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new onlineUpdater(panelOnline,
-            networkDiscovery, CM),
-                   0,   //initial delay
-                   500);  //subsequent rate
-      //Thread onlineUpdtThread = new Thread(onlineUpdt);
-      //onlineUpdtThread.start();
+	if(udpBased) {
+		timer.scheduleAtFixedRate(new onlineUpdater(panelOnline,
+		    networkDiscovery, CM),
+		           0,   //initial delay
+		           500);  //subsequent rate
+	} else { // We reduce the update rate if we use a presence server in order not to overload it with requests
+		timer.scheduleAtFixedRate(new onlineUpdater(panelOnline,
+		    networkDiscovery, CM),
+		           0,   //initial delay
+		           1000);  //subsequent rate
+	}
 
    }
 }
