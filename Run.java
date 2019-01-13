@@ -7,10 +7,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -26,6 +23,8 @@ public class Run extends Frame
    private static PreConnectDiscovery discovery;
    private static JRadioButton modeSelectionUDP;
    private static JRadioButton modeSelectionHTTP;
+   private static JRadioButton modeSelectionBDD;
+   private static JRadioButton modeSelectionFile;
    private static JLabel lblServerAddressHTTP;
    private static JLabel lblServerPortHTTP;
    private static TextField serverAddressHTTP;
@@ -51,8 +50,14 @@ public class Run extends Frame
 					ex.printStackTrace();
 				}
 				finally {
-					new MainWindow(wantedPseudo,true,null,null); //true means UDP-Based network discovery
-					r.dispose();
+					if(modeSelectionBDD.isSelected()) {
+						new MainWindow(wantedPseudo,true,null,null,true); //true means UDP-Based network discovery
+						r.dispose();
+					}
+					else {
+						new MainWindow(wantedPseudo,true,null,null,false); //true means UDP-Based network discovery
+						r.dispose();
+					}
 				}
 			}
 		}
@@ -83,8 +88,13 @@ public class Run extends Frame
 								ex.printStackTrace();
 							}
 							finally {
-								new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText()); //false means HTTP presence server based network discovery
-								r.dispose();
+								if(modeSelectionBDD.isSelected()) {
+									new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText(),true); //false means HTTP presence server based network discovery
+									r.dispose();
+								} else {
+									new MainWindow(wantedPseudo,false,serverAddressHTTP.getText(), serverPortHTTP.getText(),false); //false means HTTP presence server based network discovery
+									r.dispose();
+								}
 							}
 						}
 						else if(resp.equals("SERVER_REPLY:NO")) {
@@ -186,7 +196,7 @@ public class Run extends Frame
 			modeSelectionHTTP.addActionListener(new httpListener());
 			modeSelectionUDP.addActionListener(new udpListener());
 			ButtonGroup group = new ButtonGroup();
-            group.add(modeSelectionUDP);
+            		group.add(modeSelectionUDP);
 			group.add(modeSelectionHTTP);
 			//modeSelectionHTTP.setEnabled(false);
 			modeSelectionUDP.setEnabled(true);
@@ -194,6 +204,19 @@ public class Run extends Frame
 			modeSelectionUDP.setSelected(true);
     			//modeSelectionUDP.setMnemonic(KeyEvent.VK_R);
    			//modeSelectionUDP.setActionCommand(rabbitString);
+			/* SELECTION MODE D'HISTORIQUE */
+			modeSelectionBDD = new JRadioButton("History save in a database (requires mySQL to be installed)");
+			modeSelectionFile = new JRadioButton("Save history in File System");
+			//modeSelectionBDD.addActionListener(new bddListener());
+			//modeSelectionFile.addActionListener(new fileListener());
+			ButtonGroup group2 = new ButtonGroup();
+            		group2.add(modeSelectionBDD);
+			group2.add(modeSelectionFile);
+			//modeSelectionHTTP.setEnabled(false);
+			modeSelectionBDD.setEnabled(true);
+			modeSelectionFile.setEnabled(true);
+			modeSelectionFile.setSelected(true);
+
 			(new Thread(discovery)).start();
 			box = new TextField();
             login = new Dialog(this);
@@ -206,19 +229,23 @@ public class Run extends Frame
             validate.addActionListener(new MyButtonValidateListener());
             JButton exit = new JButton("Quit");
             exit.addActionListener(new MyButtonExitListener());		   
-            login.setSize(850, 300);
+            login.setSize(850, 400);
             login.add(lblInfo);   
 			login.add(lblError);
 			login.add(box);
-            login.add(validate);
+            		login.add(validate);
+			login.add(new JLabel("---- Network discovery mode selection : ----",SwingConstants.CENTER));
 			login.add(modeSelectionUDP);   
 			login.add(modeSelectionHTTP);  
 			login.add(lblServerAddressHTTP);
 			login.add(serverAddressHTTP);
 			login.add(lblServerPortHTTP);
 			login.add(serverPortHTTP);
-            login.add(exit);    
-            login.setVisible(true);
+			login.add(new JLabel("---- History saving mode selection ----",SwingConstants.CENTER));
+			login.add(modeSelectionBDD);   
+			login.add(modeSelectionFile); 
+		        login.add(exit);    
+			login.setVisible(true);
 			login.addWindowListener(exitListener);
    }
 

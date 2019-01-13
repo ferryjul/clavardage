@@ -76,6 +76,7 @@ public class MainWindow extends Frame {
    private static boolean udpBased;
    private String sAddress;
    private String sPort;
+   private static boolean bddBased;
 
    class DisplayHistory implements Runnable {
       public void setList(ArrayList<String> l) {
@@ -175,10 +176,11 @@ public class MainWindow extends Frame {
     }
 };
 
-   public MainWindow(String userName, boolean isUDPBased, String serverAddress, String serverPort) {
+   public MainWindow(String userName, boolean isUDPBased, String serverAddress, String serverPort, boolean isBDDBased) {
       // Création de la fenêtre graphique
 	  super("Chat Room");
       //this.setTitle("Chat Room");
+      bddBased = isBDDBased;
       udpBased = isUDPBased;
       sAddress = serverAddress;
       sPort = serverPort;
