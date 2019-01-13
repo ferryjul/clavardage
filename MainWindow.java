@@ -272,6 +272,12 @@ public class MainWindow extends Frame {
       else {
 	login.add(new JLabel("presence Server discovery mode"));
       }
+      if(bddBased) {
+	login.add(new JLabel("Histories save mode : Database"));
+      }
+      else {
+	login.add(new JLabel("Histories save mode : File System"));
+      }
       login.setVisible(true);
 	  login.addWindowListener(exitListener);
 
