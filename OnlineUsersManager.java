@@ -138,12 +138,12 @@ public class OnlineUsersManager implements Runnable {
 			return(-2);
 		}
 		this.hasBeenModified = true;
-		synchronized(onlineUsers) {
-			onlineUsers.remove(userPseudo);
-			this.userPseudo = newPseudo;
-			onlineUsers.put(userPseudo, null);			
-		}
 		if(udpBased) {
+			synchronized(onlineUsers) {
+				onlineUsers.remove(userPseudo);
+				this.userPseudo = newPseudo;
+				onlineUsers.put(userPseudo, null);			
+			}
 			try {
 				message = new String("[021]_" + userPseudo); //Réponse à un utilisateur en ligne
 				sendBuf = message.getBytes();
@@ -158,6 +158,7 @@ public class OnlineUsersManager implements Runnable {
 		}
 		else {
 			try {
+				this.userPseudo = newPseudo;
 				String address = "http://" + sAddress + ":" + sPort + "/presenceserver/connect?display=false&type=change&pseudo=" + userPseudo;			
 				System.out.println("Trying to connect to \"" + address + "\"");
 				URL url = new URL(address);
