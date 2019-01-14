@@ -88,4 +88,11 @@ Pour **arrêter le serveur**, la commande suivante peut être utilisée :
 
 Les différentes actions associées aux requêtes listées ci-dessus sont effectuées indépendamment de la valeur du paramètre display. Seul le format de la réponse du serveur change.
 
+**Affichage dans un serveur web des informations du serveur**
+Requête utilisée :
+>localhost:8080/presenceserver/connect?display="true"&type="info"&pseudo="julien"
+
+![Optional Text](../master/pictures/screenshot3.png)
+
+
 
