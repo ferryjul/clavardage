@@ -47,7 +47,7 @@ Les modes de découverte des utilisateurs en ligne et de stockage des historique
 # SERVEUR DE PRESENCE
 
 **Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”**, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
-
+```bash
 presenceserver
 	|_WEB_INF
 		|_classes
@@ -57,7 +57,7 @@ presenceserver
 			|_presenceServer
 				|_ClavardageServlet.java
 		|_web.xml
-
+```
 C’est l’arborescence classique d’une servlet Java, pour TomCat. **Le répertoire “classes” contient le résultat de la compilation de la servlet, tandis que le répertoire “src” contient le code source de la servlet.**
 **Le fichier “web.xml” est le “descripteur de déploiement”.** Il contient, au format xml, les paramètres de déploiement de la servlet sur le serveur de TomCat. Par exemple, c’est ce fichier qui définit l’addresse URL par laquelle la servlet est accessible. Nous l’avons déjà rempli, et il n’est pas nécessaire de le modifier. Le serveur de présence est accessible à l’addresse :
 >localhost:8080/presenceserver/connect
