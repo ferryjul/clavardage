@@ -283,11 +283,13 @@ public class MainWindow extends Frame {
 
       // Lancement de la découverte Réseau
       // On passe au OnlineUsersManager l'information sur le fonctionnement en UDP ou via un serveur de présence HTTP
+		HistoryManager.BDD= bddBased;// mode historique
       networkDiscovery = new OnlineUsersManager(userName, udpBased, sAddress, sPort);
       Thread networkDiscoveryThread = new Thread(networkDiscovery);
       networkDiscoveryThread.start();
 
       // Création du gestionnaire d'historique
+
       HistoryManager HM = new HistoryManager();
       Thread historyManagerThread = new Thread(HM);
       historyManagerThread.start();
