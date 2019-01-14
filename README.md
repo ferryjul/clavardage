@@ -14,7 +14,7 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
-**Présentation rapide du parcours de l’utilisateur dans notre application :**
+## Présentation rapide du parcours de l’utilisateur dans notre application :
 
 ## 1) Fenêtre de connexion :
 
@@ -38,16 +38,17 @@ Après connection, l’utilisateur a, sur cette fenêtre principale, la possibil
 - _afficher la liste des historiques stockés sur cette machine_ (une nouvelle fenêtre s’ouvre, et l’utilisateur peut alors consulter l’historique de conversation de son choix).
 - _se déconnecter_
 
-*Notes : 
-Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application. 
-La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.
-Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
+*Notes :* 
+- *Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application.*
+- *La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.*
+- *Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
+- *La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite d'inonder le réseau de messages ou de surcharger le seveur de présence inutilement)*
 
 
 # SERVEUR DE PRESENCE
 
 **Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”**, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
-
+```bash
 presenceserver
 	|_WEB_INF
 		|_classes
@@ -57,11 +58,12 @@ presenceserver
 			|_presenceServer
 				|_ClavardageServlet.java
 		|_web.xml
-
+```
 C’est l’arborescence classique d’une servlet Java, pour TomCat. **Le répertoire “classes” contient le résultat de la compilation de la servlet, tandis que le répertoire “src” contient le code source de la servlet.**
 **Le fichier “web.xml” est le “descripteur de déploiement”.** Il contient, au format xml, les paramètres de déploiement de la servlet sur le serveur de TomCat. Par exemple, c’est ce fichier qui définit l’addresse URL par laquelle la servlet est accessible. Nous l’avons déjà rempli, et il n’est pas nécessaire de le modifier. Le serveur de présence est accessible à l’addresse :
 >localhost:8080/presenceserver/connect
-(si le serveur TomCat est déployé localement et sur le port 8080 (le choix du port de déploiement est défini dans votre installation TomCat, et modifiable dans le fichier “server.xml” du répertoire “conf” dans le dossier d’installation de TomCat)).
+
+*(si le serveur TomCat est déployé localement et sur le port 8080 (le choix du port de déploiement est défini dans votre installation TomCat, et modifiable dans le fichier “server.xml” du répertoire “conf” dans le dossier d’installation de TomCat)).*
 
 Pour **déployer le serveur de présence**, il faut copier/coller le dossier presenceserver (décompressé) dans le répertoire webapps de votre installation TomCat.
 *Note : la servlet est ici déjà compilée, mais pour la (re)compiler, il est nécessaire d’inclure l’API Servlet (qui fait partie de JEE). Un moyen de le faire est de copier/coller la version de cette API fournie par TomCat (qui se trouve dans le répertoire d’installation de TomCat, dans le dossier “lib” (servlet-api.jar)) dans le répertoire d’installation de Java (sous jre/lib/ext). La commande à exécuter pour compiler la servlet et stocker le résultat dans le répertoire adéquat est alors :*
