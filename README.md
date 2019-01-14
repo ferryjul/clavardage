@@ -18,7 +18,7 @@ Se placer dans le dossier au dessus des dossiers clavardage et histories et exé
 
 ## 1) Fenêtre de connexion :
 
-![Optional Text](../master/pictures/screenshot1.png)
+![Fenêtre de connection](../master/pictures/screenshot1.png)
 
 Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir** :
 
@@ -29,7 +29,7 @@ Au moment de se connecter (après le clic sur le bouton dédié), **l’applicat
 
 ## 2) Fenêtre principale :
 
-![Optional Text](../master/pictures/screenshot1.png)
+![Fenêtre principale](../master/pictures/screenshot2.png)
 
 Après connection, l’utilisateur a, sur cette fenêtre principale, la possibilité de :
 - _voir la liste des utilisateurs en ligne_ (seulement l’utilisateur Julien sur la capture d’écran par exemple)
@@ -90,11 +90,12 @@ Pour **arrêter le serveur**, la commande suivante peut être utilisée :
 
 Les différentes actions associées aux requêtes listées ci-dessus sont effectuées indépendamment de la valeur du paramètre display. Seul le format de la réponse du serveur change.
 
-**Affichage dans un serveur web des informations du serveur**
+**Affichage dans un navigateur web des informations du serveur**
+
 Requête utilisée :
 >localhost:8080/presenceserver/connect?display="true"&type="info"&pseudo="julien"
 
-![Optional Text](../master/pictures/screenshot3.png)
+![Affichage HTML du serveur de présence](../master/pictures/screenshot3.png)
 
 
 
