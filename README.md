@@ -5,14 +5,14 @@
 ================= APPLICATION CLIENT =================
 
 Pour compiler les fichiers sources de l’application client, il suffit d’exécuter la commande suivante : 
-javac *.java
+>javac *.java
 
 Installation : 
 Créer un dossier "histories" au même niveau que le dossier clavardage.
 
 Pour lancer le programme : 
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
-"java clavardage/Run"
+>java clavardage/Run
 
 Présentation rapide du parcours de l’utilisateur dans notre application :
 
