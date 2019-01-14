@@ -71,7 +71,7 @@ public class ConversationManager implements Runnable {
 				synchronized(historyM) {
 					conv = new Conversation(mySock, 
 					historyM.createHistory(idHost, 
-										   ( idHost + "_" + (new java.util.Date()).toString() ), new java.util.Date()), 
+										   (idHost + "_" + (new java.util.Date()).toString().replace(":","_") + ".txt"), new java.util.Date()), 
 				idHost);
 				}
 			
@@ -98,7 +98,7 @@ public class ConversationManager implements Runnable {
 		synchronized(historyM) {
 			conv = new Conversation(mySock, 
 				historyM.createHistory(idHost, 
-				(idHost + (new java.util.Date()).toString() + ".history"), new java.util.Date()), 
+				(idHost + "_" + (new java.util.Date()).toString().replace(":","_") + ".txt"), new java.util.Date()), 
 				idHost);
 		}
 		return conv;
