@@ -11,9 +11,10 @@ import java.sql.*;
 public class HistoryManager implements Runnable{
 
 	public static Boolean BDD;
-	String url = "jdbc:mysql://localhost:3306/historique";
+	String url = "jdbc:mysql://localhost:3306/historique?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 	String utilisateur = "java";
 	String motDePasse = "pom2pin";
+	
 
 
 	public History createHistory(String idDist , String fileName, Date connectDate)
@@ -31,14 +32,24 @@ public class HistoryManager implements Runnable{
 		ArrayList<String> listHist = new ArrayList<String>();
 		if (BDD == true)
 		{
+		    try {
+		    	System.out.println( "Chargement du driver..." );
+		        Class.forName( "com.mysql.cj.jdbc.Driver" );
+		        System.out.println( "Driver chargé !" );
+		    } catch ( ClassNotFoundException e ) {
+		    	System.out.println( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath !");
+
+		    }
+		    
 			Connection connexion = null;
 			Statement statement = null;
 			ResultSet resultat  = null;
-			int statut = 0;
+		
 		
 			try {
+				System.out.println("Tentative de connection à la BDD (allHist)");
    				connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
-   				System.out.println("ConnectÃ© Ã  la BDD");
+   				System.out.println("Connecter à la BDD");
    				statement = connexion.createStatement();
 				resultat = statement.executeQuery( "SELECT DISTINCT pseudo_and_date_debut_conv FROM HistConv;");
 
@@ -48,6 +59,7 @@ public class HistoryManager implements Runnable{
 			
     		} catch ( SQLException e ) {
     			System.out.println("Erreur SQL listAllHist");
+    			e.printStackTrace();
 			} finally {
 				if ( resultat != null ) {
        				try {
@@ -94,15 +106,16 @@ public class HistoryManager implements Runnable{
 		
 		if (BDD == true)
 		{
+	
 			Connection connexion = null;
 			Statement statement = null;
 			ResultSet resultat  = null;
-			int statut = 0;
+	
 		
 			try {
    				connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
    				statement = connexion.createStatement();
-				resultat = statement.executeQuery("FROM HistConv WHERE pseudo_and_date_debut_conv='"+ fileName +"';");
+				resultat = statement.executeQuery("SELECT * FROM HistConv WHERE pseudo_and_date_debut_conv='"+ fileName +"';");
 
 				while ( resultat.next() ) {
    					 listHist.add(resultat.getString(2));

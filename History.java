@@ -3,8 +3,7 @@ package clavardage;
 import java.io.IOException;
 import java.util.Date;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.DataOutputStream;
+
 import java.io.FileWriter;
 import java.sql.*;
 
@@ -16,7 +15,7 @@ public class History {
 	private Date sessionDate;
 	private FileWriter fWrit; // si on utilise persistence des données avec fichiers (sinon inutile)
 	private Boolean BDD;
-	private String url = "jdbc:mysql://localhost:3306/historique";
+	private String url = "jdbc:mysql://localhost:3306/historique?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 	private String utilisateur = "java";
 	private String motDePasse = "pom2pin";
 
