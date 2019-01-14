@@ -2,7 +2,7 @@
 - L’ensemble des composants de l’application client de clavardage (les fichiers .java)
 - Un dossier compressé (.zip) contenant les fichiers utiles au déploiement du serveur de présence
 
-# ================= APPLICATION CLIENT =================
+# APPLICATION CLIENT
 
 Pour **compiler les fichiers sources de l’application client**, il suffit d’exécuter la commande suivante : 
 >javac *.java
@@ -42,7 +42,7 @@ La réception d’un message dans une conversation déjà ouverte entraine la mi
 Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
 
 
-# ================= SERVEUR DE PRESENCE =================
+# SERVEUR DE PRESENCE
 
 **Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”**, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
 
