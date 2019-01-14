@@ -14,7 +14,7 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
-**Présentation rapide du parcours de l’utilisateur dans notre application :**
+## Présentation rapide du parcours de l’utilisateur dans notre application :
 
 ## 1) Fenêtre de connexion :
 
