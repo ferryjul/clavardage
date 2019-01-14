@@ -2,7 +2,7 @@
 - L’ensemble des composants de l’application client de clavardage (les fichiers .java)
 - Un dossier compressé (.zip) contenant les fichiers utiles au déploiement du serveur de présence
 
-##================= APPLICATION CLIENT =================
+# ================= APPLICATION CLIENT =================
 
 Pour **compiler les fichiers sources de l’application client**, il suffit d’exécuter la commande suivante : 
 >javac *.java
@@ -16,7 +16,7 @@ Se placer dans le dossier au dessus des dossiers clavardage et histories et exé
 
 **Présentation rapide du parcours de l’utilisateur dans notre application :**
 
-1) Fenêtre de connexion :
+## 1) Fenêtre de connexion :
 
 
 Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir** :
@@ -26,7 +26,7 @@ Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir
 - _le mode de stockage des historiques_ : soit **dans des fichiers** (requiert seulement la présence d’un dossier “histories” au même niveau que le dossier “clavardage”), soit **dans une base de données** (requiert une installation d’un logiciel de base de données, et la création de tables, comme décrit dans la section dédiée de ce README).
 Au moment de se connecter (après le clic sur le bouton dédié), **l’application vérifie que le pseudo rentré par l’utilisateur est non vide et libre** (en fonction du mode de découverte du réseau choisi, soit avec une requête GET au serveur de présence soit par broadcast UDP et analyse des réponses).
 
-2) Fenêtre principale :
+## 2) Fenêtre principale :
 
 
 Après connection, l’utilisateur a, sur cette fenêtre principale, la possibilité de :
@@ -42,9 +42,9 @@ La réception d’un message dans une conversation déjà ouverte entraine la mi
 Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
 
 
-##================= SERVEUR DE PRESENCE =================
+# ================= SERVEUR DE PRESENCE =================
 
-Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
+**Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”**, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
 
 presenceserver
 	|_WEB_INF
