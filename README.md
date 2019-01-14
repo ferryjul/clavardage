@@ -38,11 +38,11 @@ Après connection, l’utilisateur a, sur cette fenêtre principale, la possibil
 - _afficher la liste des historiques stockés sur cette machine_ (une nouvelle fenêtre s’ouvre, et l’utilisateur peut alors consulter l’historique de conversation de son choix).
 - _se déconnecter_
 
-*Notes : 
-- Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application. 
-- La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.
-- Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre
-- La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite d'inonder le réseau de messages ou de surcharger le seveur de présence inutilement)*
+*Notes :* 
+- *Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application.*
+- *La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.*
+- *Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
+- *La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite d'inonder le réseau de messages ou de surcharger le seveur de présence inutilement)*
 
 
 # SERVEUR DE PRESENCE
