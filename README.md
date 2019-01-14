@@ -18,6 +18,7 @@ Se placer dans le dossier au dessus des dossiers clavardage et histories et exé
 
 ## 1) Fenêtre de connexion :
 
+![Optional Text](../master/pictures/screenshot1.png)
 
 Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir** :
 
@@ -28,6 +29,7 @@ Au moment de se connecter (après le clic sur le bouton dédié), **l’applicat
 
 ## 2) Fenêtre principale :
 
+![Optional Text](../master/pictures/screenshot1.png)
 
 Après connection, l’utilisateur a, sur cette fenêtre principale, la possibilité de :
 - _voir la liste des utilisateurs en ligne_ (seulement l’utilisateur Julien sur la capture d’écran par exemple)
