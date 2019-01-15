@@ -120,5 +120,7 @@ Une fois la base de données initialisée, il suffit de laisser tourner MySQL en
 
 Pour utiliser ce mode de persistance de données, **il suffit de créer un dossier « histories » au même niveau que le dossier « clavardage »**. Dans ce dossier, les fichiers textes qui sauvegardent l’historique des messages seront automatiquement créés lors de l’utilisation de l’application.
 
+**Exemple de fichier texte correspondant à une conversation passée :**
+![Affichage HTML du serveur de présence](../master/pictures/screenshot5.PNG)
 
 
