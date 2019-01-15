@@ -14,9 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class HistoryDisplayWindow extends JFrame
 {
-   private ArrayList<String> filesList;
    private JLabel lblInput;
    private JDialog login;
 
@@ -54,7 +54,6 @@ public class HistoryDisplayWindow extends JFrame
 	public HistoryDisplayWindow(ArrayList<String> l)
 	{
 	   this.setTitle("List of stored histories");
-		this.filesList = l;
         login = new JDialog(this);
         lblInput = new JLabel("List of all available history files for this user of the computer :",
               JLabel.CENTER);

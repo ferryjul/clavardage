@@ -1,7 +1,5 @@
 package clavardage;
 
-import java.io.IOException;
-
 public class TestConversationListen {
 
 

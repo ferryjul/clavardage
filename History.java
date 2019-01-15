@@ -129,7 +129,6 @@ public class History {
 		{
 			Connection connexion = null;
 			Statement statement = null;
-			ResultSet resultat  = null;
 			int statut = 0;
 		
 			try {

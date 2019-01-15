@@ -1,7 +1,6 @@
 package clavardage;
 
 import java.awt.*;
-import java.awt.Component;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -72,7 +71,6 @@ public class MainWindow extends Frame {
    private static TextField txtNewPseudo;
    private static TextField openConvWith;
    private static ConversationManager CM;
-   private static HistoryManager HM;
    private static boolean udpBased;
    private String sAddress;
    private String sPort;
@@ -80,7 +78,7 @@ public class MainWindow extends Frame {
 
    class DisplayHistory implements Runnable {
       public void setList(ArrayList<String> l) {
-         HistoryDisplayWindow w = new HistoryDisplayWindow(l);
+         new HistoryDisplayWindow(l);
       }
 
       public void run() {

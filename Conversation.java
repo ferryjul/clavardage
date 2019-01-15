@@ -1,8 +1,6 @@
 package clavardage;
-import java.io.IOException;
 import java.net.Socket;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
@@ -20,6 +18,7 @@ import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 
+@SuppressWarnings("serial")
 public class Conversation extends Frame {
 	// Composants Réseau
 	private String distantID;

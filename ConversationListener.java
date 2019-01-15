@@ -2,13 +2,9 @@ package clavardage;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.BufferedReader;
-import java.util.Date;
 
 import javax.swing.JLabel;
 
@@ -18,7 +14,6 @@ private Socket distantSocket;
 private TextArea messagesDisplay;
 private JLabel lblInfos;
 private boolean active;
-private boolean finished;
 private boolean once = true;
 private History myHist;
 
@@ -72,7 +67,6 @@ private History myHist;
 	@Override
 	public void run() {
 		this.active = true;
-		this.finished = false;
 		while(active){
 			// Nothing	
 			String r = receive();

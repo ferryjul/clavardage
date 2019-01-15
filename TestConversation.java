@@ -1,7 +1,5 @@
 package clavardage;
 
-import java.net.InetAddress;
-import java.io.IOException;
 
 public class TestConversation {
 

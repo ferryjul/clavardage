@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.net.InetAddress;
-import java.util.Date;
 import java.util.Iterator;
 
 public class ConversationManager implements Runnable {
@@ -20,7 +19,8 @@ public class ConversationManager implements Runnable {
 	private ArrayList<Conversation> activeConversation;
 
 	// Socket d'écoute qui permet de recevoir les demandes de conversation
-	public void ConversationManager() {				
+	public ConversationManager() {				
+	        super();
 	}
 
 	public void setDiscovery(OnlineUsersManager d) {

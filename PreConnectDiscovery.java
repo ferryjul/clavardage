@@ -1,6 +1,5 @@
 package clavardage;
 import java.net.DatagramSocket ;
-import java.util.ArrayList; 
 import java.util.HashMap; 
 import java.net.InetAddress;
 import java.net.DatagramPacket;

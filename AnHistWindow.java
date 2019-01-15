@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class AnHistWindow extends Frame
 {
    private ArrayList<String> msgList;

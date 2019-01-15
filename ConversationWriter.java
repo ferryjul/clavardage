@@ -1,12 +1,7 @@
 package clavardage;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.awt.TextArea;
 
 public class ConversationWriter implements Runnable {
