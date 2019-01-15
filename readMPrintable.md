@@ -1,10 +1,17 @@
+RAPPORT DE PROJET
+============
+###Julien Ferry
+###Quentin Genoud
+###4IR-A
+
+
 ﻿Ce dossier contient :
 - L’ensemble des composants de l’application client de clavardage (les fichiers .java)
 - Un dossier compressé (.zip) contenant les fichiers utiles au déploiement du serveur de présence
 - Un driver JDBC (au format .jar)
 - Un fichier SQL permettant la mise en place de la base de données utilisée (sur MySQL)
 
-*Note : Tous les diagrammes de conception sont accessibles à l'addresse suivante :* https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S
+*Note : Tous les diagrammes de conception sont accessibles à l'addresse suivante :* [https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S](https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S) 
 
 # APPLICATION CLIENT
 
@@ -24,7 +31,7 @@ Se placer dans le dossier au dessus des dossiers clavardage et histories et exé
 
 ## 1) Fenêtre de connexion :
 
-![Fenêtre de connection](../master/pictures/screenshot1.png)
+![Fenêtre de connection](/home/julien/TP_POO/clavardage/pictures/screenshot1.png)
 
 Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir** :
 
@@ -35,7 +42,7 @@ Au moment de se connecter (après le clic sur le bouton dédié), **l’applicat
 
 ## 2) Fenêtre principale :
 
-![Fenêtre principale](../master/pictures/screenshot2.png)
+![Fenêtre principale](/home/julien/TP_POO/clavardage/pictures/screenshot2.png)
 
 Après connection, l’utilisateur a, sur cette fenêtre principale, la possibilité de :
 - _voir la liste des utilisateurs en ligne_ (seulement l’utilisateur Julien sur la capture d’écran par exemple)
@@ -101,7 +108,7 @@ Les différentes actions associées aux requêtes listées ci-dessus sont effect
 Requête utilisée :
 >localhost:8080/presenceserver/connect?display="true"&type="info"&pseudo="julien"
 
-![Affichage HTML du serveur de présence](../master/pictures/screenshot3.png)
+![Affichage HTML du serveur de présence](/home/julien/TP_POO/clavardage/pictures/screenshot3.png)
 
 # HISTORIQUE ET PERSISTANCE DES DONNEES :
 
@@ -120,13 +127,13 @@ Une fois le driver ajouté au classpath, il faut créer manuellement la base de 
 Une fois la base de données initialisée, il suffit de laisser tourner MySQL en fond puis on peut se servir de l’application avec ce mode de persistance.
 
 **Exemple de table de données correspondant à une conversation passée (dans MySQL) :**
-![Affichage HTML du serveur de présence](../master/pictures/screenshot4.PNG)
+![Affichage HTML du serveur de présence](/home/julien/TP_POO/clavardage/pictures/screenshot4.PNG)
 	
 ## 2) Historique avec fichiers texte :
 
 Pour utiliser ce mode de persistance de données, **il suffit de créer un dossier « histories » au même niveau que le dossier « clavardage »**. Dans ce dossier, les fichiers textes qui sauvegardent l’historique des messages seront automatiquement créés lors de l’utilisation de l’application.
 
 **Exemple de fichier texte correspondant à une conversation passée :**
-![Affichage HTML du serveur de présence](../master/pictures/screenshot5.PNG)
+![Affichage HTML du serveur de présence](/home/julien/TP_POO/clavardage/pictures/screenshot5.PNG)
 
 
