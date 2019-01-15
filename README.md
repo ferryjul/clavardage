@@ -112,9 +112,13 @@ Tout d’abord, **pour utiliser ce mode il faut avoir installé MySQL**. Puis, *
 Une fois le driver ajouté au classpath, il faut créer manuellement la base de données dans MySQL ainsi que l’utilisateur qui aura les droits sur cette base de données. Pour ce faire, il suffit de taper les commandes dans MySQL écrites dans le fichier « histo.sql » qui se trouve dans notre repository git ou alors d’exécuter le fichier (s’il se trouve dans le répertoire où a été lancé MySQL) avec la commande SQL « SOURCE histo.sql; ».
 
 Une fois la base de données initialisée, il suffit de laisser tourner MySQL en fond puis on peut se servir de l’application avec ce mode de persistance.
+
+**Exemple de table de données correspondant à une conversation passée (dans MySQL) :**
+![Affichage HTML du serveur de présence](../master/pictures/screenshot4.PNG)
 	
 ## 2) Historique avec fichiers texte :
 
 Pour utiliser ce mode de persistance de données, **il suffit de créer un dossier « histories » au même niveau que le dossier « clavardage »**. Dans ce dossier, les fichiers textes qui sauvegardent l’historique des messages seront automatiquement créés lors de l’utilisation de l’application.
+
 
 
