@@ -97,7 +97,7 @@ Requête utilisée :
 
 ![Affichage HTML du serveur de présence](../master/pictures/screenshot3.png)
 
-# Historique et persistance des données :
+# HISTORIQUE ET PERSISTANCE DES DONNEES :
 
 La persistance de données que nous avons choisi d’implémenter permet de **sauvegarder l’historique en local**. C’est-à-dire que vous ne pouvez voir que les historiques des conversations que vous avez eues sur l’ordinateur utilisé. Par exemple, si vous prenez le pseudo « Antoine7 » sur un ordinateur A et que plus tard vous prenez ce même pseudo « Antoine7 » sur un ordinateur B, vous ne pourrez pas accéder à l’historique des messages que vous avez eu en utilisant l’ordinateur A. Nous avons fait ce choix pour des questions de sécurité et confidentialité.
 
