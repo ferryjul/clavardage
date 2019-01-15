@@ -4,6 +4,8 @@
 
 # APPLICATION CLIENT
 
+*Un utilisateur correspond à une machine, on ne peut donc lancer qu'une seule session de l'application sur un ordinateur. Une conversation correspond au couple (pseudo de l'utilisateur distant, date de la conversation).*
+
 Pour **compiler les fichiers sources de l’application client**, il suffit d’exécuter la commande suivante : 
 >javac *.java
 
