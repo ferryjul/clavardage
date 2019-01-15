@@ -35,9 +35,9 @@ public class HistoryManager implements Runnable{
 		    try {
 		    	System.out.println( "Chargement du driver..." );
 		        Class.forName( "com.mysql.cj.jdbc.Driver" );
-		        System.out.println( "Driver chargé !" );
+		        System.out.println( "Driver charge !" );
 		    } catch ( ClassNotFoundException e ) {
-		    	System.out.println( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath !");
+		    	System.out.println( "Erreur lors du chargement : le driver n'a pas ete trouve dans le classpath !");
 
 		    }
 		    
@@ -47,9 +47,9 @@ public class HistoryManager implements Runnable{
 		
 		
 			try {
-				System.out.println("Tentative de connection à la BDD (allHist)");
+				System.out.println("Tentative de connection a la BDD (allHist)");
    				connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
-   				System.out.println("Connecter à la BDD");
+   				System.out.println("Connecter a la BDD");
    				statement = connexion.createStatement();
 				resultat = statement.executeQuery( "SELECT DISTINCT pseudo_and_date_debut_conv FROM HistConv;");
 
