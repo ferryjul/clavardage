@@ -2,7 +2,7 @@
 - L’ensemble des composants de l’application client de clavardage (les fichiers .java)
 - Un dossier compressé (.zip) contenant les fichiers utiles au déploiement du serveur de présence
 
-*Note : Tous les diagrammes de conception sont accessibles à l'addresse suivante : https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S * 
+*Note : Tous les diagrammes de conception sont accessibles à l'addresse suivante :* https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S
 
 # APPLICATION CLIENT
 
