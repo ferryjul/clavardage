@@ -103,7 +103,7 @@ La persistance de données que nous avons choisi d’implémenter permet de **sa
 
 De plus, il faut savoir que **nous avons choisi de laisser le choix à deux modes de persistance de données différents**. Le premier mode nécessite l’installation de MySQL et l’utilisation de JDBC tandis que le deuxième n’a pas besoin d’utiliser MySQL et enregistre l’historique dans des fichiers texte. Nous avons fait ce choix car par exemple sur les ordinateurs de l’INSA, on ne peut pas installer MySQL (car nous n’avons pas les droits suffisants sur ces ordinateurs) donc l’historique ne serait pas disponible.
 
-**Ce choix de mode s’effectue sur la fenêtre de lancement de l’application** (en même temps que le choix entre le mode UDP et le serveur distant). L’historique est accessible une fois connecté sur la fenêtre principale en cliquant sur le bouton « Display all available histories », mais on ne peut accéder à l’historique que dans le mode choisi (c’est-à-dire que soit on peut voir l’historique stocké dans les fichiers textes, soit l’historique stocké dans la BDD SQL mais pas les deux en même temps).
+**Ce choix de mode s’effectue sur la fenêtre de lancement de l’application** (en même temps que le choix entre le mode UDP et le serveur distant). **L’historique est accessible une fois connecté sur la fenêtre principale en cliquant sur le bouton « Display all available histories »**, mais on ne peut accéder à l’historique que dans le mode choisi (c’est-à-dire que soit on peut voir l’historique stocké dans les fichiers textes, soit l’historique stocké dans la BDD SQL mais pas les deux en même temps).
 	
 ## 1) Historique avec base de données (MySQL et JDBC) :
 
