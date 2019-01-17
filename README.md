@@ -17,6 +17,7 @@ Pour **compiler les fichiers sources de l’application client**, il suffit d’
 **Installation** : 
 - En fonction du mode de découverte des utilisateurs en ligne choisi :  Avoir installé un conteneur de Servlet, et avoir placé correctement le dossier de la servlet fournie (voir la section "Serveur de présence").
 - En fonction du mode de persistance des données choisi : Créer un dossier "histories" au même niveau que le dossier clavardage, ou avoir installé et configuré mySQL (voir la section "Historique et Persistance des données").
+
 Pour **lancer le programme** : 
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
