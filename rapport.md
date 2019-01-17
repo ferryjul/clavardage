@@ -21,6 +21,7 @@ Pour **compiler les fichiers sources de l’application client**, il suffit d’
 >javac *.java
 
 **Installation** : 
+
 - En fonction du mode de découverte des utilisateurs en ligne choisi :  Avoir installé un conteneur de Servlet, et avoir placé correctement le dossier de la servlet fournie (voir la section "Serveur de présence").
 - En fonction du mode de persistance des données choisi : Créer un dossier "histories" au même niveau que le dossier clavardage, ou avoir installé et configuré mySQL (voir la section "Historique et Persistance des données").
 
@@ -65,8 +66,8 @@ Après connection, l’utilisateur a, sur cette fenêtre principale, la possibil
 
 - _voir la liste des utilisateurs en ligne_ (seulement l’utilisateur Julien sur la capture d’écran par exemple)
 - _changer son pseudo_. Si le changement n’est pas possible (pseudo déjà pris par exemple), l’application le signale à l’utilisateur et n’effectue pas le changement.
-- _lancer une conversation avec un utilisateur_ (si une conversation n’est pas déjà lancée avec cet utilisateur, une nouvelle fenêtre s’ouvre alors, chez l’utilisateur distant et chez l’utilisateur local).
-- _afficher la liste des historiques stockés sur cette machine_ (une nouvelle fenêtre s’ouvre, et l’utilisateur peut alors consulter l’historique de conversation de son choix).
+- _lancer une conversation avec un utilisateur_ (si une conversation n’est pas déjà lancée avec cet utilisateur, une nouvelle fenêtre s’ouvre alors, chez l’utilisateur distant et chez l’utilisateur local ; si une conversation avec cet utilisateur a déjà été créée, un message s'affiche pour l'indiquer à l'utilisateur).
+- _afficher la liste des historiques stockés sur cette machine_ (une nouvelle fenêtre s’ouvre, et l’utilisateur peut alors consulter l’historique de conversation de son choix (les historiques disponibles seront ceux correspondant au mode de stockage spécifié lors de la connection, tandis que ceux stockés dans l'autre mode ne seront pas visibles)).
 - _se déconnecter_
 
 
@@ -74,8 +75,8 @@ Après connection, l’utilisateur a, sur cette fenêtre principale, la possibil
 
 - *Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application, au cours des conversations.*
 - *La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.*
-- *Les modes de découverte des utilisateurs en ligne et de stockage des historiques choisis lors de la connection sont rappelés en bas de la fenêtre*
-- *La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite d'inonder le réseau de messages ou de surcharger le seveur de présence inutilement)*
+- *Les modes de découverte des utilisateurs en ligne et de stockage des historiques choisis lors de la connection sont rappelés en bas de la fenêtre.*
+- *La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite de surcharger le seveur de présence inutilement). Dans le cas de l'utilisation d'un serveur de présence, les requêtes sont effectuées périodiquement, tandis que dans le cas de l'architecture distribuée, les différents messages reçus permettent de maintenir à jour la liste des utilisateurs en ligne.*
 
 # DECOUVERTE DES UTILISATEURS EN LIGNE
 
@@ -92,6 +93,7 @@ La syntaxe générale de ces messages émis en broadcast est la suivante :
 - Déclaration d'un nouveau pseudo : [021]_NouveauPseudo *(Ancien pseudo déterminé par l'addresse)*
 - Se déconnecter : [002]_Pseudo
 
+L'inconvénient majeur de ce mode de découverte est la possibilité de pertes (difficilement détectables et corrigibles) de paquets (UDP n'offrant aucune garantie de service).
 
 ## 2) Serveur de présence
 
@@ -126,6 +128,8 @@ Pour **arrêter le serveur**, la commande suivante peut être utilisée :
 
 **Le format général des requêtes (GET) que notre serveur de présence va traiter** est le suivant :
 >**addresseDéploiementServeurTomcat:portDéploiement/presenceserver/connect?display=”unBooléen”&pseudo=”unPseudo”&type=”unType”**
+
+**Explication des paramètres :**
 
 - _unBooléen_ peut être soit true (le serveur renvoie alors un affichage en HTML de plusieurs paramètres, notamment la liste des utilisateurs connectés, le nombre de requêtes reçues...etc), soit autre chose (auquel cas le serveur renvoie des données dans un format exploitable par l’application client).
 - _unPseudo_ est le pseudo de l’utilisateur qui effectue la requête
