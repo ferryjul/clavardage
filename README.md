@@ -22,6 +22,13 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
+Résumé des fonctionnalités implémentées par notre application de clavardage :
+
+- Découverte des utilisateurs en ligne par l'utilisation d'un serveur de présence ou via une architecture distribuée (au choix)
+- Stockage (automatique) et consultation des historiques de conversion dans une base de données ou sous forme de fichiers (au choix)
+- Discussion entre utilisateurs via des sockets TCP
+- Possibilité pour un utilisateur de changer son pseudo une fois connecté 
+
 # DECOUVERTE DES UTILISATEURS EN LIGNE
 
 **Il y a deux modes de découverte des utilisateurs en ligne disponibles**. Le premier ne nécessite pas d'installation particulière tandis que le deuxième nécessite l'installation d'un serveur de présence.
