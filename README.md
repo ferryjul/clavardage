@@ -22,7 +22,7 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
-Résumé des fonctionnalités implémentées par notre application de clavardage :
+**Résumé des fonctionnalités implémentées par notre application de clavardage :**
 
 - Découverte des utilisateurs en ligne par l'utilisation d'un serveur de présence ou via une architecture distribuée (au choix)
 - Stockage (automatique) et consultation des historiques de conversation dans une base de données ou sous forme de fichiers (au choix)
