@@ -14,42 +14,15 @@ Pour **compiler les fichiers sources de l’application client**, il suffit d’
 >javac *.java
 
 **Installation** : 
-Créer un dossier "histories" au même niveau que le dossier clavardage.
-
+- En fonction du mode de découverte des utilisateurs en ligne choisi :  Avoir installé un conteneur de Servlet, et avoir placé correctement le dossier de la servlet fournie (voir la section "Serveur de présence").
+- En fonction du mode de persistance des données choisi : Créer un dossier "histories" au même niveau que le dossier clavardage, ou avoir installé et configuré mySQL (voir la section "Historique et Persistance des données").
 Pour **lancer le programme** : 
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
-## Présentation rapide du parcours de l’utilisateur dans notre application :
+# DECOUVERTE DU RESEAU PAR BROADCAST UDP
 
-## 1) Fenêtre de connexion :
-
-![Fenêtre de connection](../master/pictures/screenshot1.png)
-
-Avant de se connecter à l’application de Chat, **l’utilisateur doit choisir** :
-
-- _le mode de découverte du réseau_ : soit **basée sur UDP** (ce qui requiert que les différents utilisateurs soient sur le même domaine de broadcast et limite donc l’utilisation de ce mode aux réseaux locaux), soit **basée sur l’utilisation d’un serveur de présence HTTP** (ce qui requiert qu’un serveur de présence HTTP soit déployé et accessible, à une addresse et un numéro de port connus et à renseigner dans l’application).
-
-- _le mode de stockage des historiques_ : soit **dans des fichiers** (requiert seulement la présence d’un dossier “histories” au même niveau que le dossier “clavardage”), soit **dans une base de données** (requiert une installation d’un logiciel de base de données, et la création de tables, comme décrit dans la section dédiée de ce README).
-Au moment de se connecter (après le clic sur le bouton dédié), **l’application vérifie que le pseudo rentré par l’utilisateur est non vide et libre** (en fonction du mode de découverte du réseau choisi, soit avec une requête GET au serveur de présence soit par broadcast UDP et analyse des réponses).
-
-## 2) Fenêtre principale :
-
-![Fenêtre principale](../master/pictures/screenshot2.png)
-
-Après connection, l’utilisateur a, sur cette fenêtre principale, la possibilité de :
-- _voir la liste des utilisateurs en ligne_ (seulement l’utilisateur Julien sur la capture d’écran par exemple)
-- _changer son pseudo_. Si le changement n’est pas possible (pseudo déjà pris par exemple), l’application le signale à l’utilisateur et n’effectue pas le changement.
-- _lancer une conversation avec un utilisateur_ (si une conversation n’est pas déjà lancée avec cet utilisateur, une nouvelle fenêtre s’ouvre alors, chez l’utilisateur distant et chez l’utilisateur local).
-- _afficher la liste des historiques stockés sur cette machine_ (une nouvelle fenêtre s’ouvre, et l’utilisateur peut alors consulter l’historique de conversation de son choix).
-- _se déconnecter_
-
-*Notes :* 
-- *Dans tous les cas, les historiques de conversation sont sauvegardés automatiquement par l’application.*
-- *La réception d’un message dans une conversation déjà ouverte entraine la mise au premier plan de la fenêtre de conversation concernée.*
-- *Les modes de découverte des utilisateurs en ligne et de stockage des historiques sont rappelés en bas de la fenêtre*
-- *La liste des utilisateurs en ligne est mise à jour automatiquement grâce à une tâche périodique programmée sur un Timer (de cette manière on évite d'inonder le réseau de messages ou de surcharger le seveur de présence inutilement)*
-
+Ce mode de découverte du réseau n'implique aucune installation particulière. Il correspond simplement à l'**échange de messages UDP d'une syntaxe particulière, analysés et exploités par tous les clients appartenant au domaine de broadcast correpondant.**
 
 # SERVEUR DE PRESENCE
 
@@ -105,11 +78,7 @@ Requête utilisée :
 
 # HISTORIQUE ET PERSISTANCE DES DONNEES :
 
-La persistance de données que nous avons choisi d’implémenter permet de **sauvegarder l’historique en local**. C’est-à-dire que vous ne pouvez voir que les historiques des conversations que vous avez eues sur l’ordinateur utilisé. Par exemple, si vous prenez le pseudo « Antoine7 » sur un ordinateur A et que plus tard vous prenez ce même pseudo « Antoine7 » sur un ordinateur B, vous ne pourrez pas accéder à l’historique des messages que vous avez eu en utilisant l’ordinateur A. Nous avons fait ce choix pour des questions de sécurité et confidentialité.
-
-De plus, il faut savoir que **nous avons choisi de laisser le choix à deux modes de persistance de données différents**. Le premier mode nécessite l’installation de MySQL et l’utilisation de JDBC tandis que le deuxième n’a pas besoin d’utiliser MySQL et enregistre l’historique dans des fichiers texte. Nous avons fait ce choix car par exemple sur les ordinateurs de l’INSA, on ne peut pas installer MySQL (car nous n’avons pas les droits suffisants sur ces ordinateurs) donc l’historique ne serait pas disponible.
-
-**Ce choix de mode s’effectue sur la fenêtre de lancement de l’application** (en même temps que le choix entre le mode UDP et le serveur distant). **L’historique est accessible une fois connecté sur la fenêtre principale en cliquant sur le bouton « Display all available histories »**, mais on ne peut accéder à l’historique que dans le mode choisi (c’est-à-dire que soit on peut voir l’historique stocké dans les fichiers textes, soit l’historique stocké dans la BDD SQL mais pas les deux en même temps).
+ **Il y a deux modes de persistance de données disponibles**. Le premier mode nécessite l’installation de MySQL et l’utilisation de JDBC tandis que le deuxième n’a pas besoin d’utiliser MySQL et enregistre l’historique dans des fichiers texte. 
 	
 ## 1) Historique avec base de données (MySQL et JDBC) :
 
@@ -118,15 +87,9 @@ Tout d’abord, **pour utiliser ce mode il faut avoir installé MySQL**. Puis, *
 Une fois le driver ajouté au classpath, il faut créer manuellement la base de données dans MySQL ainsi que l’utilisateur qui aura les droits sur cette base de données. Pour ce faire, il suffit de taper les commandes dans MySQL écrites dans le fichier « histo.sql » qui se trouve dans notre repository git ou alors d’exécuter le fichier (s’il se trouve dans le répertoire où a été lancé MySQL) avec la commande SQL « SOURCE histo.sql; ».
 
 Une fois la base de données initialisée, il suffit de laisser tourner MySQL en fond puis on peut se servir de l’application avec ce mode de persistance.
-
-**Exemple de table de données correspondant à une conversation passée (dans MySQL) :**
-![Affichage HTML du serveur de présence](../master/pictures/screenshot4.PNG)
 	
 ## 2) Historique avec fichiers texte :
 
 Pour utiliser ce mode de persistance de données, **il suffit de créer un dossier « histories » au même niveau que le dossier « clavardage »**. Dans ce dossier, les fichiers textes qui sauvegardent l’historique des messages seront automatiquement créés lors de l’utilisation de l’application.
-
-**Exemple de fichier texte correspondant à une conversation passée :**
-![Affichage HTML du serveur de présence](../master/pictures/screenshot5.PNG)
 
 
