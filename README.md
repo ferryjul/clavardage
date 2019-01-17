@@ -20,11 +20,15 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
-# DECOUVERTE DU RESEAU PAR BROADCAST UDP
+# DECOUVERTE DES UTILISATEURS EN LIGNE
+
+**Il y a deux modes de decouverte des utilisateurs en ligne disponibles**. Le premier ne nécessite pas d'installation particulière tandis que le deuxième nécessite l'installation d'un serveur de présence.
+
+## 1. Découverte du réseau par broadcast UDP
 
 Ce mode de découverte du réseau n'implique aucune installation particulière. Il correspond simplement à l'**échange de messages UDP d'une syntaxe particulière, analysés et exploités par tous les clients appartenant au domaine de broadcast correpondant.**
 
-# SERVEUR DE PRESENCE
+## 2. Serveur de présence
 
 **Pour déployer le serveur de présence contenu dans le fichier “presenceserver.zip”**, l’installation d’un conteneur de servlet est un prérequis. Le dossier proposé ici a été constitué pour fonctionner avec le logiciel libre TomCat. **Voici son arborescence :**
 ```bash
@@ -38,7 +42,6 @@ presenceserver
 				|_ClavardageServlet.java
 		|_web.xml
 ```
-C’est l’arborescence classique d’une servlet Java, pour TomCat. **Le répertoire “classes” contient le résultat de la compilation de la servlet, tandis que le répertoire “src” contient le code source de la servlet.**
 **Le fichier “web.xml” est le “descripteur de déploiement”.** Il contient, au format xml, les paramètres de déploiement de la servlet sur le serveur de TomCat. Par exemple, c’est ce fichier qui définit l’addresse URL par laquelle la servlet est accessible. Nous l’avons déjà rempli, et il n’est pas nécessaire de le modifier. Le serveur de présence est accessible à l’addresse :
 >localhost:8080/presenceserver/connect
 
@@ -55,26 +58,10 @@ Une fois le dossier décompressé copié collé dans le repertoire webapps de To
 Pour **arrêter le serveur**, la commande suivante peut être utilisée :
 >sudo $CATALINA_HOME/bin/shutdown.sh
 
-**Le format général des requêtes (GET) que notre serveur de présence va traiter** est le suivant :
->**addresseDéploiementServeurTomcat/presenceserver/connect?display=”unBooléen”&pseudo=”unPseudo”&type=”unType”**
-
-- _unBooléen_ peut être soit true (le serveur renvoie alors un affichage en HTML de plusieurs paramètres, notamment la liste des utilisateurs connectés, le nombre de requêtes reçues...etc), soit autre chose (auquel cas le serveur renvoie des données dans un format exploitable par l’application client).
-- _unPseudo_ est le pseudo de l’utilisateur qui effectue la requête
-- _unType_ est le type de requête que l’utilisateur effectue. Ce peut être :
-	- *connect* : l’utilisateur effectue cette requête pour **signaler au serveur de présence qu’il est en ligne.**
-	- *deconnect* : l’utilisateur effectue cette requête pour **signaler au serveur de présence qu’il n’est plus en ligne.**
-	- *change* : l’utilisateur effectue cette requête pour **signaler au serveur de présence qu’il change de pseudo.** Le paramètre _unPseudo_ contient alors le nouveau pseudo, et c’est l’addresse du client qui est utilisée par le serveur pour l’identifier.
-	- *info* : l’utilisateur effectue cette requête pour **demander au serveur la liste des utilisateurs connectés.**
-	- *isfree* : l’utilisateur effectue cette requête pour **demander au serveur si le pseudo renseigné dans le champ _unPseudo_ est libre (ou s’il est déjà pris).**
-
-Les différentes actions associées aux requêtes listées ci-dessus sont effectuées indépendamment de la valeur du paramètre display. Seul le format de la réponse du serveur change.
-
 **Affichage dans un navigateur web des informations du serveur**
 
 Requête utilisée :
 >localhost:8080/presenceserver/connect?display="true"&type="info"&pseudo="julien"
-
-![Affichage HTML du serveur de présence](../master/pictures/screenshot3.png)
 
 # HISTORIQUE ET PERSISTANCE DES DONNEES :
 
