@@ -4,6 +4,7 @@
 - Un driver JDBC (au format .jar)
 - Un fichier SQL permettant la mise en place de la base de données utilisée (sur MySQL)
 - Un rapport/guide utilisateur (au format .pdf)
+
 *Note : Tous les diagrammes de conception sont accessibles à l'addresse suivante :* https://drive.google.com/open?id=1A7HP-Bph0FLwvJ8UnAnUXOJcFPdM0w4S
 
 # APPLICATION CLIENT
