@@ -22,7 +22,7 @@ Se placer dans le dossier au dessus des dossiers clavardage et histories et exé
 
 # DECOUVERTE DES UTILISATEURS EN LIGNE
 
-**Il y a deux modes de decouverte des utilisateurs en ligne disponibles**. Le premier ne nécessite pas d'installation particulière tandis que le deuxième nécessite l'installation d'un serveur de présence.
+**Il y a deux modes de découverte des utilisateurs en ligne disponibles**. Le premier ne nécessite pas d'installation particulière tandis que le deuxième nécessite l'installation d'un serveur de présence.
 
 ## 1. Découverte du réseau par broadcast UDP
 
