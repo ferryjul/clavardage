@@ -28,7 +28,16 @@ Pour **lancer le programme** :
 Se placer dans le dossier au dessus des dossiers clavardage et histories et exécuter la commande :
 >java clavardage/Run
 
+**Résumé des fonctionnalités implémentées par notre application de clavardage :**
+
+- Découverte des utilisateurs en ligne par l'utilisation d'un serveur de présence ou via une architecture distribuée (au choix)
+- Stockage (automatique) et consultation des historiques de conversation dans une base de données ou sous forme de fichiers (au choix)
+- Discussion entre utilisateurs via des sockets TCP
+- Possibilité pour un utilisateur de changer son pseudo une fois connecté 
+- Interface graphique sobre et fonctionnelle
+
 **Traitement des erreurs :**
+
 Les erreurs non critiques (c'est à dire que l'application peut continuer à fonctionner normalement après leur occurence) sont traitées dans des blocs try/catch, affichées dans la console (indications permettant de localiser leur occurence dans le programme + affichage de la trace) et, si elles sont liées à une action de l'utilisateur, elles donnent lieu à l'affichage d'un message d'erreur dans la fenêtre de l'application.
 Certaines erreurs critiques sont partiellement, ou pas gérées. Par exemple, au cours de la connection, si le serveur de présence spécifié par l'utilisateur n'est pas joignable, un message d'erreur est affiché au bout d'un certain délai pendant lequel l'application n'est pas utilisable. Des erreurs encore plus graves, comme par exemple l'impossibilité d'ouvrir le DatagramSocket servant à la découverte du réseau en UDP, donnent lieu à un affichage dans la console, mais leur occurence empêche évidemment le bon fonctionnement de l'application.
 
